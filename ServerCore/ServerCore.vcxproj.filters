@@ -132,15 +132,6 @@
     <ClInclude Include="JobTimer.h">
       <Filter>Job</Filter>
     </ClInclude>
-    <ClInclude Include="DBConnection.h">
-      <Filter>DB</Filter>
-    </ClInclude>
-    <ClInclude Include="DBConnectionPool.h">
-      <Filter>DB</Filter>
-    </ClInclude>
-    <ClInclude Include="DBBind.h">
-      <Filter>DB</Filter>
-    </ClInclude>
     <ClInclude Include="rapidxml_iterators.hpp">
       <Filter>XML</Filter>
     </ClInclude>
@@ -161,12 +152,6 @@
     </ClInclude>
     <ClInclude Include="ConsoleLog.h">
       <Filter>Log</Filter>
-    </ClInclude>
-    <ClInclude Include="DBModel.h">
-      <Filter>DB</Filter>
-    </ClInclude>
-    <ClInclude Include="DBSynchronizer.h">
-      <Filter>DB</Filter>
     </ClInclude>
     <ClInclude Include="DeliveryNotificationManager.h">
       <Filter>RUDP</Filter>
@@ -266,15 +251,6 @@
     <ClCompile Include="JobTimer.cpp">
       <Filter>Job</Filter>
     </ClCompile>
-    <ClCompile Include="DBConnection.cpp">
-      <Filter>DB</Filter>
-    </ClCompile>
-    <ClCompile Include="DBConnectionPool.cpp">
-      <Filter>DB</Filter>
-    </ClCompile>
-    <ClCompile Include="DBBind.cpp">
-      <Filter>DB</Filter>
-    </ClCompile>
     <ClCompile Include="FileUtils.cpp">
       <Filter>Utils</Filter>
     </ClCompile>
@@ -283,12 +259,6 @@
     </ClCompile>
     <ClCompile Include="ConsoleLog.cpp">
       <Filter>Log</Filter>
-    </ClCompile>
-    <ClCompile Include="DBModel.cpp">
-      <Filter>DB</Filter>
-    </ClCompile>
-    <ClCompile Include="DBSynchronizer.cpp">
-      <Filter>DB</Filter>
     </ClCompile>
     <ClCompile Include="DeliveryNotificationManager.cpp">
       <Filter>RUDP</Filter>

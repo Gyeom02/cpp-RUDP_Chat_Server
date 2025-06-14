@@ -5,6 +5,7 @@
 #include "BufferReader.h"
 #include "ServerPacketHandler.h"
 #include "Player.h"
+//#include "CLoginApp.h"
 char sendData[] = "Hello World";
 #define SERVERADDR L"192.168.219.147"
 
@@ -159,11 +160,8 @@ BOOL WINAPI ConsoleHandler(DWORD signal) {
 }
 int main()
 {
-	if (!SetConsoleCtrlHandler(ConsoleHandler, TRUE))
-		cout << "SetConsoleCtrlHandler Failed" << endl;
-	else
-		cout << "SetConsoleCtrlHandler Succeed" << endl;
-	this_thread::sleep_for(2s);
+	SetConsoleCtrlHandler(ConsoleHandler, TRUE);
+	
 
 	if (GUDP.UDPInit())
 	{
@@ -172,14 +170,16 @@ int main()
 	}
 	ServerPacketHandler::Init();
 
-	for (int32 i = 0; i < GUDP.SOCKNUM; i++)
-	{
-		
-		Init_Send();
-		 
-		Recv(GUDP.GetUDPSocket(0), GUDP.GetUDPSocket(0)->GetNetAddress());
-	}
-	this_thread::sleep_for(5s);
+	//ExLoginApp.InitInstance();
+
+	//for (int32 i = 0; i < GUDP.SOCKNUM; i++)
+	//{
+	//	
+	//	Init_Send();
+	//	 
+	//	Recv(GUDP.GetUDPSocket(0), GUDP.GetUDPSocket(0)->GetNetAddress());
+	//}
+	//this_thread::sleep_for(5s);
 
 	//ClientServiceRef service = MakeShared<ClientService>(
 	//	NetAddress(L"127.0.0.1", 7777),
@@ -229,8 +229,8 @@ int main()
 		service->Broadcast(sendBuffer);
 		this_thread::sleep_for(1s);
 	}*/
-	ULONGLONG timeout = 15000;
-	ULONGLONG now = ::GetTickCount64();
+	/*ULONGLONG timeout = 15000;
+	ULONGLONG now = ::GetTickCount64();*/
 	//GThreadManager->Launch([=]() {
 	//	while (true)
 	//	{
@@ -244,111 +244,111 @@ int main()
 	//			//break;
 	//	}
 	//	});
-	for (int32 i = 0; i < GUDP.SOCKNUM; i++)
-		GThreadManager->Launch([=]() {
-			while (true)
-			{
-				//Recv(static_pointer_cast<UDPSocket>(_player->GetOwnerSocket()), _player->GetNetAddr());
-			
-				GUDP.GetUDPSocket(i)->UDPWork();
-				//if (GetTickCount64() - now >= timeout + 5000)
-					//break;
-			}
-			});
-	for (int32 i = 0; i < 3; i++)
-	{
-		GThreadManager->Launch([=]()
-			{
-				GUDP.UDPDoJop();
+	//for (int32 i = 0; i < GUDP.SOCKNUM; i++)
+	//	GThreadManager->Launch([=]() {
+	//		while (true)
+	//		{
+	//			//Recv(static_pointer_cast<UDPSocket>(_player->GetOwnerSocket()), _player->GetNetAddr());
+	//		
+	//			GUDP.GetUDPSocket(i)->UDPWork();
+	//			//if (GetTickCount64() - now >= timeout + 5000)
+	//				//break;
+	//		}
+	//		});
+	//for (int32 i = 0; i < 3; i++)
+	//{
+	//	GThreadManager->Launch([=]()
+	//		{
+	//			GUDP.UDPDoJop();
 
-			});
+	//		});
 
-	}
-	
+	//}
+	//
 
-	/*Protocol::C_INIT chatPktt;
-	auto sendBufferr = ServerPacketHandler::MakeSendBuffer(chatPktt);
-	for(auto& p : GPlayerManager.GetPlayers())
-		Send(p.second->playerId, static_pointer_cast<UDPSocket>(p.second->GetOwnerSocket()), p.second->GetNetAddr(), sendBufferr);
-	*/
-	this_thread::sleep_for(1s);
-	for (int32 i = 0; i < 1; i++) // i = 패킷 강도를 나타냄
-		GThreadManager->Launch([=]() // 플레이어 클래스마다 RUDP AckRange 클래스 배열을 갖고있고 돌아가면서 차있으면 AckRange 정보를 송신한다
-			{
+	///*Protocol::C_INIT chatPktt;
+	//auto sendBufferr = ServerPacketHandler::MakeSendBuffer(chatPktt);
+	//for(auto& p : GPlayerManager.GetPlayers())
+	//	Send(p.second->playerId, static_pointer_cast<UDPSocket>(p.second->GetOwnerSocket()), p.second->GetNetAddr(), sendBufferr);
+	//*/
+	//this_thread::sleep_for(1s);
+	//for (int32 i = 0; i < 1; i++) // i = 패킷 강도를 나타냄
+	//	GThreadManager->Launch([=]() // 플레이어 클래스마다 RUDP AckRange 클래스 배열을 갖고있고 돌아가면서 차있으면 AckRange 정보를 송신한다
+	//		{
 
-				while (true)
-				{
-					this_thread::sleep_for(0.016ms);
-					if (GPlayerManager.GetPlayers().empty())
-						continue;
-					for (auto& p : GPlayerManager.GetPlayers())
-					{
-						if (p.second->playerId != 0)
-						{
-							//cout << "SENDING MSG ID : " << p.second->playerId << endl;
-							Protocol::C_MSG chatPkt;
-							chatPkt.set_msg(u8"Hello World !");
-							auto sendBufferchatPkt = ServerPacketHandler::MakeUnReliableBuffer(chatPkt);
-							Send(p.second->playerId, static_pointer_cast<UDPSocket>(p.second->ownerSocket), p.second->netAddress, sendBufferchatPkt);
-							
-							auto sendBufferchatPkttt = ServerPacketHandler::MakeReliableBuffer(chatPkt, QoSCore::LOW);
-							Send(p.second->playerId, static_pointer_cast<UDPSocket>(p.second->ownerSocket), p.second->netAddress, sendBufferchatPkttt);
+	//			while (true)
+	//			{
+	//				this_thread::sleep_for(0.016ms);
+	//				if (GPlayerManager.GetPlayers().empty())
+	//					continue;
+	//				for (auto& p : GPlayerManager.GetPlayers())
+	//				{
+	//					if (p.second->playerId != 0)
+	//					{
+	//						//cout << "SENDING MSG ID : " << p.second->playerId << endl;
+	//						Protocol::C_MSG chatPkt;
+	//						chatPkt.set_msg(u8"Hello World !");
+	//						auto sendBufferchatPkt = ServerPacketHandler::MakeUnReliableBuffer(chatPkt);
+	//						Send(p.second->playerId, static_pointer_cast<UDPSocket>(p.second->ownerSocket), p.second->netAddress, sendBufferchatPkt);
+	//						
+	//						auto sendBufferchatPkttt = ServerPacketHandler::MakeReliableBuffer(chatPkt, QoSCore::LOW);
+	//						Send(p.second->playerId, static_pointer_cast<UDPSocket>(p.second->ownerSocket), p.second->netAddress, sendBufferchatPkttt);
 
-							auto sendBufferchatPktt = ServerPacketHandler::MakeReliableBuffer(chatPkt, QoSCore::HIGH);
-							Send(p.second->playerId, static_pointer_cast<UDPSocket>(p.second->ownerSocket), p.second->netAddress, sendBufferchatPktt);
-						}
-					}
-					//PacketDeliverCondition();
+	//						auto sendBufferchatPktt = ServerPacketHandler::MakeReliableBuffer(chatPkt, QoSCore::HIGH);
+	//						Send(p.second->playerId, static_pointer_cast<UDPSocket>(p.second->ownerSocket), p.second->netAddress, sendBufferchatPktt);
+	//					}
+	//				}
+	//				//PacketDeliverCondition();
 
-					//if (GetTickCount64() - now >= timeout)
-						//break;
-				}
-				
-			});
+	//				//if (GetTickCount64() - now >= timeout)
+	//					//break;
+	//			}
+	//			
+	//		});
 
-	//	cout << "a" << endl;
-	//while(true)
-	//	GUDP.UDPDoJop();
-	int32 start =0;
-	int32 count = 0;
-	bool bhascount;
-	
-	
-	while (true)
-	{
-		//this_thread::sleep_for(100ms);
-		if (GPlayerManager.GetPlayers().empty())
-			continue;
-		for (auto& p : GPlayerManager.GetPlayers())
-		{
-			PlayerRef player = p.second;
-			if (player && player->playerId != 0)
-			{
-				//this_thread::sleep_for(100ms);
-				while (true) //AckRange 비울때까지
-				{
-					if (player->GetDeliveryManager()->WritePendingAcks(start, count, bhascount)) // 보낼 Ack이 쌓였다
-					{
-						Protocol::C_RUDPACK pkt;
-						pkt.set_bhascount(bhascount);
-						pkt.set_count(count);
-						pkt.set_start(start);
-						pkt.set_playerid(player->playerId);
-						SendBufferRef sendBufferR = ServerPacketHandler::MakeUnReliableBuffer(pkt);
-						player->Send(sendBufferR);
-						//cout << "Send RUDP ACK" << endl;
-					}
-					else
-						break;
-				}
-			}
-			player->GetDeliveryManager()->ProcessTimeOutPackets();
-			//PacketLost();
-			PacketDeliverCondition(player);
-		}
-		
-	}
-	GThreadManager->Join();
+	////	cout << "a" << endl;
+	////while(true)
+	////	GUDP.UDPDoJop();
+	//int32 start =0;
+	//int32 count = 0;
+	//bool bhascount;
+	//
+	//
+	//while (true)
+	//{
+	//	//this_thread::sleep_for(100ms);
+	//	if (GPlayerManager.GetPlayers().empty())
+	//		continue;
+	//	for (auto& p : GPlayerManager.GetPlayers())
+	//	{
+	//		PlayerRef player = p.second;
+	//		if (player && player->playerId != 0)
+	//		{
+	//			//this_thread::sleep_for(100ms);
+	//			while (true) //AckRange 비울때까지
+	//			{
+	//				if (player->GetDeliveryManager()->WritePendingAcks(start, count, bhascount)) // 보낼 Ack이 쌓였다
+	//				{
+	//					Protocol::C_RUDPACK pkt;
+	//					pkt.set_bhascount(bhascount);
+	//					pkt.set_count(count);
+	//					pkt.set_start(start);
+	//					pkt.set_playerid(player->playerId);
+	//					SendBufferRef sendBufferR = ServerPacketHandler::MakeUnReliableBuffer(pkt);
+	//					player->Send(sendBufferR);
+	//					//cout << "Send RUDP ACK" << endl;
+	//				}
+	//				else
+	//					break;
+	//			}
+	//		}
+	//		player->GetDeliveryManager()->ProcessTimeOutPackets();
+	//		//PacketLost();
+	//		PacketDeliverCondition(player);
+	//	}
+	//	
+	//}
+	//GThreadManager->Join();
 	
 	return 0;
 }
