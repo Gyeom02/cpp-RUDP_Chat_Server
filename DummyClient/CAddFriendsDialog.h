@@ -12,6 +12,7 @@ protected:
 	virtual void DoDataExchange(CDataExchange* pDX);
 	virtual BOOL OnInitDialog() override;
 	afx_msg HBRUSH OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor);
+	
 	virtual BOOL PreTranslateMessage(MSG* pMsg) override;
 
 	void SetError(int32 i);
@@ -31,6 +32,8 @@ private:
 
 public:
 	afx_msg void OnBnClickedAdd();
-	
+	afx_msg void OnCancel();
+
+	CDialog* ownerDialog;
 };
 

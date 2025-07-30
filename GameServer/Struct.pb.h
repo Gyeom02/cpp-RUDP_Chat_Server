@@ -47,7 +47,7 @@ struct TableStruct_Struct_2eproto {
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
   static const ::PROTOBUF_NAMESPACE_ID::internal::AuxiliaryParseTableField aux[]
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
-  static const ::PROTOBUF_NAMESPACE_ID::internal::ParseTable schema[7]
+  static const ::PROTOBUF_NAMESPACE_ID::internal::ParseTable schema[8]
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
   static const ::PROTOBUF_NAMESPACE_ID::internal::FieldMetadata field_metadata[];
   static const ::PROTOBUF_NAMESPACE_ID::internal::SerializationTable serialization_table[];
@@ -55,6 +55,9 @@ struct TableStruct_Struct_2eproto {
 };
 extern const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable descriptor_table_Struct_2eproto;
 namespace Protocol {
+class Friend;
+struct FriendDefaultTypeInternal;
+extern FriendDefaultTypeInternal _Friend_default_instance_;
 class MoveList;
 struct MoveListDefaultTypeInternal;
 extern MoveListDefaultTypeInternal _MoveList_default_instance_;
@@ -78,6 +81,7 @@ struct VelocityDefaultTypeInternal;
 extern VelocityDefaultTypeInternal _Velocity_default_instance_;
 }  // namespace Protocol
 PROTOBUF_NAMESPACE_OPEN
+template<> ::Protocol::Friend* Arena::CreateMaybeMessage<::Protocol::Friend>(Arena*);
 template<> ::Protocol::MoveList* Arena::CreateMaybeMessage<::Protocol::MoveList>(Arena*);
 template<> ::Protocol::MoveTeam* Arena::CreateMaybeMessage<::Protocol::MoveTeam>(Arena*);
 template<> ::Protocol::Player* Arena::CreateMaybeMessage<::Protocol::Player>(Arena*);
@@ -89,6 +93,154 @@ PROTOBUF_NAMESPACE_CLOSE
 namespace Protocol {
 
 // ===================================================================
+
+class Friend final :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:Protocol.Friend) */ {
+ public:
+  inline Friend() : Friend(nullptr) {}
+  ~Friend() override;
+  explicit constexpr Friend(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized);
+
+  Friend(const Friend& from);
+  Friend(Friend&& from) noexcept
+    : Friend() {
+    *this = ::std::move(from);
+  }
+
+  inline Friend& operator=(const Friend& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline Friend& operator=(Friend&& from) noexcept {
+    if (this == &from) return *this;
+    if (GetOwningArena() == from.GetOwningArena()) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const Friend& default_instance() {
+    return *internal_default_instance();
+  }
+  static inline const Friend* internal_default_instance() {
+    return reinterpret_cast<const Friend*>(
+               &_Friend_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    0;
+
+  friend void swap(Friend& a, Friend& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(Friend* other) {
+    if (other == this) return;
+    if (GetOwningArena() == other->GetOwningArena()) {
+      InternalSwap(other);
+    } else {
+      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(Friend* other) {
+    if (other == this) return;
+    GOOGLE_DCHECK(GetOwningArena() == other->GetOwningArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline Friend* New() const final {
+    return new Friend();
+  }
+
+  Friend* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
+    return CreateMaybeMessage<Friend>(arena);
+  }
+  void CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void CopyFrom(const Friend& from);
+  void MergeFrom(const Friend& from);
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  ::PROTOBUF_NAMESPACE_ID::uint8* _InternalSerialize(
+      ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(Friend* other);
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "Protocol.Friend";
+  }
+  protected:
+  explicit Friend(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  private:
+  static void ArenaDtor(void* object);
+  inline void RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  public:
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kNicknameFieldNumber = 1,
+    kBonlineFieldNumber = 2,
+  };
+  // string nickname = 1;
+  void clear_nickname();
+  const std::string& nickname() const;
+  template <typename ArgT0 = const std::string&, typename... ArgT>
+  void set_nickname(ArgT0&& arg0, ArgT... args);
+  std::string* mutable_nickname();
+  PROTOBUF_FUTURE_MUST_USE_RESULT std::string* release_nickname();
+  void set_allocated_nickname(std::string* nickname);
+  private:
+  const std::string& _internal_nickname() const;
+  inline PROTOBUF_ALWAYS_INLINE void _internal_set_nickname(const std::string& value);
+  std::string* _internal_mutable_nickname();
+  public:
+
+  // int32 bonline = 2;
+  void clear_bonline();
+  ::PROTOBUF_NAMESPACE_ID::int32 bonline() const;
+  void set_bonline(::PROTOBUF_NAMESPACE_ID::int32 value);
+  private:
+  ::PROTOBUF_NAMESPACE_ID::int32 _internal_bonline() const;
+  void _internal_set_bonline(::PROTOBUF_NAMESPACE_ID::int32 value);
+  public:
+
+  // @@protoc_insertion_point(class_scope:Protocol.Friend)
+ private:
+  class _Internal;
+
+  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
+  typedef void InternalArenaConstructable_;
+  typedef void DestructorSkippable_;
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr nickname_;
+  ::PROTOBUF_NAMESPACE_ID::int32 bonline_;
+  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  friend struct ::TableStruct_Struct_2eproto;
+};
+// -------------------------------------------------------------------
 
 class Player final :
     public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:Protocol.Player) */ {
@@ -134,7 +286,7 @@ class Player final :
                &_Player_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    0;
+    1;
 
   friend void swap(Player& a, Player& b) {
     a.Swap(&b);
@@ -315,7 +467,7 @@ class Position final :
                &_Position_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    1;
+    2;
 
   friend void swap(Position& a, Position& b) {
     a.Swap(&b);
@@ -469,7 +621,7 @@ class Rotation final :
                &_Rotation_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    2;
+    3;
 
   friend void swap(Rotation& a, Rotation& b) {
     a.Swap(&b);
@@ -623,7 +775,7 @@ class Velocity final :
                &_Velocity_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    3;
+    4;
 
   friend void swap(Velocity& a, Velocity& b) {
     a.Swap(&b);
@@ -777,7 +929,7 @@ class MoveList final :
                &_MoveList_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    4;
+    5;
 
   friend void swap(MoveList& a, MoveList& b) {
     a.Swap(&b);
@@ -942,7 +1094,7 @@ class MoveTeam final :
                &_MoveTeam_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    5;
+    6;
 
   friend void swap(MoveTeam& a, MoveTeam& b) {
     a.Swap(&b);
@@ -1107,7 +1259,7 @@ class PlayerMove final :
                &_PlayerMove_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    6;
+    7;
 
   friend void swap(PlayerMove& a, PlayerMove& b) {
     a.Swap(&b);
@@ -1273,6 +1425,75 @@ class PlayerMove final :
   #pragma GCC diagnostic push
   #pragma GCC diagnostic ignored "-Wstrict-aliasing"
 #endif  // __GNUC__
+// Friend
+
+// string nickname = 1;
+inline void Friend::clear_nickname() {
+  nickname_.ClearToEmpty();
+}
+inline const std::string& Friend::nickname() const {
+  // @@protoc_insertion_point(field_get:Protocol.Friend.nickname)
+  return _internal_nickname();
+}
+template <typename ArgT0, typename... ArgT>
+inline PROTOBUF_ALWAYS_INLINE
+void Friend::set_nickname(ArgT0&& arg0, ArgT... args) {
+ 
+ nickname_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, static_cast<ArgT0 &&>(arg0), args..., GetArenaForAllocation());
+  // @@protoc_insertion_point(field_set:Protocol.Friend.nickname)
+}
+inline std::string* Friend::mutable_nickname() {
+  // @@protoc_insertion_point(field_mutable:Protocol.Friend.nickname)
+  return _internal_mutable_nickname();
+}
+inline const std::string& Friend::_internal_nickname() const {
+  return nickname_.Get();
+}
+inline void Friend::_internal_set_nickname(const std::string& value) {
+  
+  nickname_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, value, GetArenaForAllocation());
+}
+inline std::string* Friend::_internal_mutable_nickname() {
+  
+  return nickname_.Mutable(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, GetArenaForAllocation());
+}
+inline std::string* Friend::release_nickname() {
+  // @@protoc_insertion_point(field_release:Protocol.Friend.nickname)
+  return nickname_.Release(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArenaForAllocation());
+}
+inline void Friend::set_allocated_nickname(std::string* nickname) {
+  if (nickname != nullptr) {
+    
+  } else {
+    
+  }
+  nickname_.SetAllocated(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), nickname,
+      GetArenaForAllocation());
+  // @@protoc_insertion_point(field_set_allocated:Protocol.Friend.nickname)
+}
+
+// int32 bonline = 2;
+inline void Friend::clear_bonline() {
+  bonline_ = 0;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 Friend::_internal_bonline() const {
+  return bonline_;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 Friend::bonline() const {
+  // @@protoc_insertion_point(field_get:Protocol.Friend.bonline)
+  return _internal_bonline();
+}
+inline void Friend::_internal_set_bonline(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  
+  bonline_ = value;
+}
+inline void Friend::set_bonline(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  _internal_set_bonline(value);
+  // @@protoc_insertion_point(field_set:Protocol.Friend.bonline)
+}
+
+// -------------------------------------------------------------------
+
 // Player
 
 // int32 id = 1;
@@ -2056,6 +2277,8 @@ inline void PlayerMove::set_allocated_vel(::Protocol::Velocity* vel) {
 #ifdef __GNUC__
   #pragma GCC diagnostic pop
 #endif  // __GNUC__
+// -------------------------------------------------------------------
+
 // -------------------------------------------------------------------
 
 // -------------------------------------------------------------------

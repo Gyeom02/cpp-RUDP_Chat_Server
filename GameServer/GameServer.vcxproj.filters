@@ -19,6 +19,9 @@
     <Filter Include="UDP">
       <UniqueIdentifier>{fd04fe39-9722-46f9-9346-2f00aa641328}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Utils\DB">
+      <UniqueIdentifier>{78df4586-db01-44a4-916e-ae22da863257}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameServer.cpp">
@@ -63,6 +66,9 @@
     <ClCompile Include="UDPJob.cpp">
       <Filter>UDP</Filter>
     </ClCompile>
+    <ClCompile Include="DBManager.cpp">
+      <Filter>DB</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -92,9 +98,6 @@
     <ClInclude Include="Player.h">
       <Filter>GameContents</Filter>
     </ClInclude>
-    <ClInclude Include="GenProcedures.h">
-      <Filter>DB</Filter>
-    </ClInclude>
     <ClInclude Include="PlayerManager.h">
       <Filter>GameContents</Filter>
     </ClInclude>
@@ -106,6 +109,15 @@
     </ClInclude>
     <ClInclude Include="UDP.h">
       <Filter>UDP</Filter>
+    </ClInclude>
+    <ClInclude Include="GenProcedures.h">
+      <Filter>Utils\DB</Filter>
+    </ClInclude>
+    <ClInclude Include="DBManager.h">
+      <Filter>DB</Filter>
+    </ClInclude>
+    <ClInclude Include="SQL_query.h">
+      <Filter>DB</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -122,12 +134,13 @@
       <Filter>Protocol</Filter>
     </None>
     <None Include="..\Common\Procedures\GenPackets.bat">
-      <Filter>DB</Filter>
+      <Filter>Utils\DB</Filter>
     </None>
+    <None Include="cpp.hint" />
   </ItemGroup>
   <ItemGroup>
     <Xml Include="GameDB.xml">
-      <Filter>DB</Filter>
+      <Filter>Utils\DB</Filter>
     </Xml>
   </ItemGroup>
 </Project>

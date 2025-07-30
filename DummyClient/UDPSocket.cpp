@@ -62,7 +62,7 @@ void UDPSocket::UDPWork()
 				PacketHeader* header = reinterpret_cast<PacketHeader*>(&udpRecvBuffer.ReadPos()[processLen]);
 				if (header->size > recvLen)
 					break;
-				if (header->priority != QoSCore::FPC && header->breliable && header->id != PKT_C_INIT && header->id != 1003 && header->id != PKT_C_RUDPACK && header->id != PKT_S_RUDPACK)
+				if (header->priority != QoSCore::FPC && header->breliable && header->id != PKT_C_RUDPACK && header->id != PKT_S_RUDPACK)
 				{
 					PlayerRef player = GPlayerManager.GetPlayer(header->playerId);
 					if (player->GetDeliveryManager()->ProcessSequenceNumber(header->sn) == false)

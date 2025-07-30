@@ -144,11 +144,12 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <LanguageStandard>stdcpp17</LanguageStandard>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>odbc32.lib</AdditionalDependencies>
     </Link>
     <PreBuildEvent>
       <Command>CALL $(SolutionDir)Common\Protobuf\bin\GenPackets.bat</Command>
@@ -178,10 +179,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="CAddFriendsDialog.cpp" />
-    <ClCompile Include="CFindAccDialog.cpp" />
     <ClCompile Include="CClientApp.cpp" />
+    <ClCompile Include="CFindIDDialog.cpp" />
     <ClCompile Include="CLoginDialog.cpp" />
     <ClCompile Include="CMainDialog.cpp" />
+    <ClCompile Include="CRequestDialog.cpp" />
     <ClCompile Include="CSignUpDialog.cpp" />
     <ClCompile Include="Enum.pb.cc">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
@@ -217,10 +219,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CAddFriendsDialog.h" />
-    <ClInclude Include="CFindAccDialog.h" />
     <ClInclude Include="CClientApp.h" />
+    <ClInclude Include="CFindIDDialog.h" />
     <ClInclude Include="CLoginDialog.h" />
     <ClInclude Include="CMainDialog.h" />
+    <ClInclude Include="CRequestDialog.h" />
     <ClInclude Include="CSignUpDialog.h" />
     <ClInclude Include="Enum.pb.h" />
     <ClInclude Include="Player.h" />
@@ -236,6 +239,11 @@
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="DummyClient.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Common\Protobuf\bin\Enum.proto" />
+    <None Include="..\Common\Protobuf\bin\Protocol.proto" />
+    <None Include="..\Common\Protobuf\bin\Struct.proto" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

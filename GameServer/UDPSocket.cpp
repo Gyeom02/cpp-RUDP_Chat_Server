@@ -63,7 +63,7 @@ void UDPSocket::UDPWork()
 				if (header->size > recvLen)
 					break;
 				//cout << "SERVER GOT MSG FROM : " << header->playerId << endl;
-				if (header->breliable)
+				if (header->breliable && header->id != PKT_C_RUDPACK && header->id != PKT_S_RUDPACK)
 				{
 					PlayerRef player = GPlayerManager.GetPlayer(header->playerId);
 					

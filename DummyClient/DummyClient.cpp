@@ -58,7 +58,8 @@ int32 Init_Send()
 {
 	SOCKADDR_IN netaddr = GUDP.GetUDPSocket(0)->GetNetAddress().GetSockAddr();
 	UDPSocketPtr socketPtr = GUDP.GetUDPSocket(0);
-	Protocol::C_INIT pkt;
+	Protocol::C_LOGIN pkt;
+	
 	SendBufferRef sendBuffer = ServerPacketHandler::MakeUnReliableBuffer(pkt);
 	//cout << netAddr.GetPort()<< endl;
 	//wcout << netAddr.GetIpAddress() << endl;

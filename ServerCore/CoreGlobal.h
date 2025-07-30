@@ -8,6 +8,6 @@ extern class JobTimer*			GJobTimer;
 //extern class DeliveryNotificationManager* GDeliveryManager;
 
 extern class DeadLockProfiler*	GDeadLockProfiler;
-//extern class DBConnectionPool*	GDBConnectionPool;
+extern class DBConnectionPool*	GDBConnectionPool;
 extern class ConsoleLog*		GConsoleLogger;
 extern class QoSCore* GQoS;

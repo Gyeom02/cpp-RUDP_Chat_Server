@@ -2,7 +2,9 @@
 #include "CLoginDialog.h"
 #include "CMainDialog.h"
 #include "CSignUpDialog.h"
-#include "CFindAccDialog.h"
+#include "CFindIDDialog.h"
+#include "ServerPacketHandler.h"
+#include "Player.h"
 
 BEGIN_MESSAGE_MAP(CLoginDialog, CDialog)
 	ON_WM_CTLCOLOR()
@@ -41,14 +43,20 @@ BOOL CLoginDialog::OnInitDialog()
 	m_btnLogin.SetTextColor(RGB(255, 255, 255));
 	
 	m_btnSignup.SubclassDlgItem(IDC_BUTTON_SIGNUP, this);
-	m_btnSignup.SetFaceColor(RGB(39, 174, 96), TRUE);
+	m_btnSignup.SetFaceColor(COLOR_DARKER_BUTTON, TRUE);
 	m_btnSignup.SetTextColor(RGB(255, 255, 255));
 
 	m_btnFind.SubclassDlgItem(IDC_BUTTON_FIND, this);
-	m_btnFind.SetFaceColor(RGB(39, 174, 96), TRUE);
+	m_btnFind.SetFaceColor(COLOR_DARKER_BUTTON, TRUE);
 	m_btnFind.SetTextColor(RGB(255, 255, 255));
 
 	return TRUE;
+}
+
+void CLoginDialog::OnOK()
+{
+	CDialog::OnOK();
+	::PostQuitMessage(0);
 }
 
 HBRUSH CLoginDialog::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor)
@@ -112,36 +120,41 @@ void CLoginDialog::OnBnClickedLogin()
 		return;
 	}
 
-	if (m_strID == _T("admin") && m_strPassword == _T("pass"))
-	{
-		CMainDialog dlg;
-		this->ShowWindow(SW_HIDE);
-		dlg.DoModal();
-		this->ShowWindow(SW_SHOW);
-		EndDialog(IDOK);
-	}
-	else
-	{
-		m_ctrlError.SetWindowTextW(_T("로그인 실패 : 올바르지 않은 ID 또는 비밀번호"));
-	}
+	CT2CA convertedString(m_strID);
+	std::string id = std::string(convertedString);
+	CT2CA convertedStringpw(m_strPassword);
+	std::string pw = std::string(convertedStringpw);
+
+	Protocol::C_LOGIN pkt;
+	pkt.set_id(id);
+	pkt.set_pw(pw);
+	SendBufferRef sendBuffer = ServerPacketHandler::MakeUnReliableBuffer(pkt);
+	
+	user.BlockSend(sendBuffer);
+
+	user.BlockRecv();
 }
 
 void CLoginDialog::OnBnClickedSignup()
 {
+	
+
 	CSignUpDialog dlg;
+	AfxGetApp()->m_pMainWnd = &dlg;
 	this->ShowWindow(SW_HIDE);
 	dlg.DoModal();
 	this->ShowWindow(SW_SHOW);
 	EndDialog(IDOK);
 }
 
+
 void CLoginDialog::OnBnClickedFind()
 {
-	AfxMessageBox(_T("개발중입니다"));
-	/*CFindAccDialog dlg;
+	CFindIdDialog dlg;
+	AfxGetApp()->m_pMainWnd = &dlg;
 	this->ShowWindow(SW_HIDE);
 	dlg.DoModal();
 	this->ShowWindow(SW_SHOW);
-	EndDialog(IDOK);*/
+	EndDialog(IDOK);
 }
 

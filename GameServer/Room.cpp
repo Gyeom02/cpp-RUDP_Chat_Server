@@ -143,90 +143,90 @@ void Room::ErasePrimToList(int32 prim)// Lock ÇÊ¿ä¾øÀ½
 
 void Room::ListSort(int32 teamNum, int32 index) //Á» ´õ LOCK ¼öÁ¤ ºÁ¾ßÇÔ
 {
-	WRITE_LOCK;
-	if (TeamModeNum == 1) //8ÆÀ //
-	{
-		int32 teammax = 8; //1ÆÀÀÌ¸é 4 2ÆÀÀÌ¸é 8ÀÓ
-		int32 less = (teammax - index); // ex  teammax = 4, index = 2 , -> less = 2
-		int32 startindex = index + 1;
-		Protocol::S_MOVETEAM pkt;
+	//WRITE_LOCK;
+	//if (TeamModeNum == 1) //8ÆÀ //
+	//{
+	//	int32 teammax = 8; //1ÆÀÀÌ¸é 4 2ÆÀÀÌ¸é 8ÀÓ
+	//	int32 less = (teammax - index); // ex  teammax = 4, index = 2 , -> less = 2
+	//	int32 startindex = index + 1;
+	//	Protocol::S_MOVETEAM pkt;
 
-		while (less > 0)
-		{
-			if (listToPrim.find(startindex) == listToPrim.end()) //
-				break;
-			PlayerRef p = GetPlayer(listToPrim[startindex]);
-			int32 nextindex = startindex - 1; // startindex°¡ ÀÌµ¿ÇÏ·Á´Â listid
+	//	while (less > 0)
+	//	{
+	//		if (listToPrim.find(startindex) == listToPrim.end()) //
+	//			break;
+	//		PlayerRef p = GetPlayer(listToPrim[startindex]);
+	//		int32 nextindex = startindex - 1; // startindex°¡ ÀÌµ¿ÇÏ·Á´Â listid
 
-			Protocol::MoveList* inform = pkt.add_moveinforms();
-			inform->set_roomprimeid(listToPrim[startindex]);
-			inform->set_roomlistid(startindex);
-			inform->set_movetolistid(nextindex);
+	//		Protocol::MoveList* inform = pkt.add_moveinforms();
+	//		inform->set_roomprimeid(listToPrim[startindex]);
+	//		inform->set_roomlistid(startindex);
+	//		inform->set_movetolistid(nextindex);
 
-			p->teamNum = GetTeamNum(nextindex);
-			inform->set_moveteamnum(p->teamNum);
+	//		p->teamNum = GetTeamNum(nextindex);
+	//		inform->set_moveteamnum(p->teamNum);
 
-			SetListID(startindex, nextindex, listToPrim[startindex]);
+	//		SetListID(startindex, nextindex, listToPrim[startindex]);
 
 
-			startindex++;
-			less--;
-		}
-		SendBufferRef sendBuffer = ClientPacketHandler::MakeReliableBuffer(pkt, QoSCore::HIGH);
-		Broadcast(sendBuffer);
+	//		startindex++;
+	//		less--;
+	//	}
+	//	SendBufferRef sendBuffer = ClientPacketHandler::MakeReliableBuffer(pkt, QoSCore::HIGH);
+	//	Broadcast(sendBuffer);
 
-		
+	//	
 
-	}
+	//}
 
-    else if (TeamModeNum == 2) //4ÆÀ
-	{
-		int32 startindex = (teamNum * 2) - 1;
-		if (startindex != index)
-			return;
-		int32 sortindex = startindex + 1;
+ //   else if (TeamModeNum == 2) //4ÆÀ
+	//{
+	//	int32 startindex = (teamNum * 2) - 1;
+	//	if (startindex != index)
+	//		return;
+	//	int32 sortindex = startindex + 1;
 
-		if (listToPrim.find(sortindex) == listToPrim.end()) //
-			return;
+	//	if (listToPrim.find(sortindex) == listToPrim.end()) //
+	//		return;
 
-		Protocol::S_MOVETEAM pkt;
-		Protocol::MoveList* inform = pkt.add_moveinforms();
-		inform->set_roomprimeid(listToPrim[sortindex]);
-		inform->set_roomlistid(sortindex);
-		inform->set_movetolistid(startindex);
-		inform->set_moveteamnum(-1);
+	//	Protocol::S_MOVETEAM pkt;
+	//	Protocol::MoveList* inform = pkt.add_moveinforms();
+	//	inform->set_roomprimeid(listToPrim[sortindex]);
+	//	inform->set_roomlistid(sortindex);
+	//	inform->set_movetolistid(startindex);
+	//	inform->set_moveteamnum(-1);
 
-		SetListID(sortindex, startindex, listToPrim[sortindex]);
-		SendBufferRef sendBuffer = ClientPacketHandler::MakeReliableBuffer(pkt, QoSCore::HIGH);
-		Broadcast(sendBuffer);
-	}
-	else if (TeamModeNum == 3) //2ÆÀ
-	{
-		int32 teammax = ((4 - index) >= 0) ? 4 : 8; //1ÆÀÀÌ¸é 4 2ÆÀÀÌ¸é 8ÀÓ
-		int32 less = (teammax - index) ; // ex  teammax = 4, index = 2 , -> less = 2
-		int32 startindex = index + 1;
-		Protocol::S_MOVETEAM pkt;
-		while (less > 0)
-		{
-			if (listToPrim.find(startindex) == listToPrim.end()) //
-				break;
-			int32 nextindex = startindex - 1; // startindex°¡ ÀÌµ¿ÇÏ·Á´Â listid
-			
+	//	SetListID(sortindex, startindex, listToPrim[sortindex]);
+	//	SendBufferRef sendBuffer = ClientPacketHandler::MakeReliableBuffer(pkt, QoSCore::HIGH);
+	//	Broadcast(sendBuffer);
+	//}
+	//else if (TeamModeNum == 3) //2ÆÀ
+	//{
+	//	int32 teammax = ((4 - index) >= 0) ? 4 : 8; //1ÆÀÀÌ¸é 4 2ÆÀÀÌ¸é 8ÀÓ
+	//	int32 less = (teammax - index) ; // ex  teammax = 4, index = 2 , -> less = 2
+	//	int32 startindex = index + 1;
+	//	Protocol::S_MOVETEAM pkt;
+	//	while (less > 0)
+	//	{
+	//		if (listToPrim.find(startindex) == listToPrim.end()) //
+	//			break;
+	//		int32 nextindex = startindex - 1; // startindex°¡ ÀÌµ¿ÇÏ·Á´Â listid
+	//		
 
-			Protocol::MoveList* inform = pkt.add_moveinforms();
-			inform->set_roomprimeid(listToPrim[startindex]);
-			inform->set_roomlistid(startindex);
-			inform->set_movetolistid(nextindex);
-			inform->set_moveteamnum(-1);
+	//		Protocol::MoveList* inform = pkt.add_moveinforms();
+	//		inform->set_roomprimeid(listToPrim[startindex]);
+	//		inform->set_roomlistid(startindex);
+	//		inform->set_movetolistid(nextindex);
+	//		inform->set_moveteamnum(-1);
 
-			SetListID(startindex, nextindex, listToPrim[startindex]);
+	//		SetListID(startindex, nextindex, listToPrim[startindex]);
 
-			startindex++;
-			less--;
-		}
-		SendBufferRef sendBuffer = ClientPacketHandler::MakeReliableBuffer(pkt, QoSCore::HIGH);
-		Broadcast(sendBuffer);
-	}
+	//		startindex++;
+	//		less--;
+	//	}
+	//	SendBufferRef sendBuffer = ClientPacketHandler::MakeReliableBuffer(pkt, QoSCore::HIGH);
+	//	Broadcast(sendBuffer);
+	//}
 }
 
 int32 Room::GetTeamNum(int32 index)

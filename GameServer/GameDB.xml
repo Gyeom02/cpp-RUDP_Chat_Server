@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <GameDB>
-	<Table name="Gold" desc="골드 테이블">
+	<!--<Table name="Gold" desc="골드 테이블">
 		<Column name="id" type="int" notnull="true" identity="1,1" />
 		<Column name="gold" type="int" notnull="false" />
 		<Column name="name" type="nvarchar(50)" notnull="false" />
@@ -9,9 +9,54 @@
 			<PrimaryKey/>
 			<Column name="id" />
 		</Index>
+	</Table>-->
+
+	<Table name="User">
+		<Column name="primid" type="int" notnull="true" />
+		<Column name="nickname" type="nvarchar(50)" notnull="true" />
+		<Column name="createDate" type="nvarchar(50)" notnull="false"/>
+		<index type="clustered">
+			<PrimaryKey/>
+			<Column name="primid"/>
+		</index>
 	</Table>
 
-	<Procedure name="spInsertGold">
+	<Table name="Account">
+		<Column name="primid" type="int" notnull="true" identity="1,1"/>
+		<Column name="id" type="nvarchar(50)" notnull="true"/>
+		<Column name="pw" type="nvarchar(50)" notnull="true"/>
+		<index type="clustered">
+			<PrimaryKey/>
+			<Column name="id"/>
+		</index>
+	</Table>
+
+	<Procedure name="spMakeAccount">
+		<Param name="@id" type="nvarchar(50)"/>
+		<Param name="@pw" type="nvarchar(50)"/>
+		<Param name="@nickname" type="nvarchar(50)"/>
+		<Body>
+			<![CDATA[
+			DECLARE @NewPrimid INT;
+			INSERT INTO [dbo].[Account]([id], [pw]) OUTPUT INSERTED.primid INTO @NewPrimid VALUES(@id, @pw);
+			INSERT INTO [dbo].[User]([primid], [nickname]) VALUES(@NewPrimid, @nickname);
+			
+			]]>
+		</Body>
+	</Procedure>
+
+	<Procedure name="spLogin">
+		<Param name="@id" type="nvarchar(50)"/>
+		<Param name="@pw" type="nvarchar(50)"/>
+		<Body>
+			<![CDATA[
+			DECLARE @GetPrimid INT;
+			SELECT @GetPrimid FROM [dbo].[Account] WHERE id = (@id) AND pw =(@pw);
+			SELECT primid, nickname FROM [dbo].[User] WHERE primid = (@GetPrimid);
+			]]>
+		</Body>
+	</Procedure>
+	<!--<Procedure name="spInsertGold">
 		<Param name="@gold" type="int"/>
 		<Param name="@name" type="nvarchar(50)"/>
 		<Param name="@createDate" type="datetime"/>
@@ -37,5 +82,5 @@
 			DROP TABLE IF EXISTS [dbo].[Gold];
 			]]>
 		</Body>
-	</Procedure>
+	</Procedure>-->
 </GameDB>

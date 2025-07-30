@@ -18,7 +18,7 @@
 #include "GenProcedures.h"
 #include "UDP.h"
 #include "PlayerManager.h"
-
+#include "DBManager.h"
 enum
 {
 	WORKER_TICK = 64
@@ -51,9 +51,8 @@ void PacketDeliverCondition(PlayerRef player)
 
 int main()
 {
-	//ASSERT_CRASH(GDBConnectionPool->Connect(1, L"Driver={SQL Server Native Client 11.0};Server=(localdb)\\MSSQLLocalDB;Database=ServerDb;Trusted_Connection=Yes;"));
-	/*
-	{
+	//DBManager::Instance().SetUpDB();
+	/*{
 		auto query = L"         \
 			DROP TABLE IF EXISTS [dbo].[Gold];\
 			CREATE TABLE [dbo].[Gold] \
@@ -74,8 +73,11 @@ int main()
 	// 
 	//
 	//{
-	//	SP::RemoveGold removeGold(*dbConn);
-	//	removeGold.Execute();
+	//	SP::MakeAccount makeAdmin(*dbConn);
+	//	makeAdmin.In_Id(L"admin");
+	//	makeAdmin.In_Pw(L"pass");
+	//	makeAdmin.In_Nickname(L"Admin");
+	//	makeAdmin.Execute();
 	//}
 
 	//{

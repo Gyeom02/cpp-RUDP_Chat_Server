@@ -11,6 +11,7 @@ public:
 protected:
 	virtual void DoDataExchange(CDataExchange* pDX);
 	virtual BOOL OnInitDialog() override;
+	virtual void OnOK() override;
 	afx_msg HBRUSH OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor);
 	virtual BOOL PreTranslateMessage(MSG* pMsg) override;
 	DECLARE_MESSAGE_MAP()
@@ -22,7 +23,7 @@ protected:
 	CMFCButton m_btnSignup;
 	CMFCButton m_btnFind;
 	
-private:
+public:
 	CString m_strID;
 	CString m_strPassword;
 	CStatic m_ctrlError;

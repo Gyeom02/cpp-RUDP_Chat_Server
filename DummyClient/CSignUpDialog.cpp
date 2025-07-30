@@ -23,7 +23,7 @@ void CSignUpDialog::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_EDIT_USERNAME, m_strUsername);
 	DDX_Text(pDX, IDC_EDIT_PASSWORD, m_strPassword);
 	DDX_Text(pDX, IDC_EDIT_NICKNAME, m_strNickname);
-	
+	DDX_Text(pDX, IDC_EDIT_EMAIL_SIGNUP, m_strEmail);
 }
 
 BOOL CSignUpDialog::OnInitDialog()
@@ -52,6 +52,7 @@ void CSignUpDialog::OnBnClickedBack()
 	if (AfxMessageBox(_T("돌아가시겠습니까?"), MB_YESNO) == IDYES)
 	{
 		CLoginDialog dlg;
+		AfxGetApp()->m_pMainWnd = &dlg;
 		this->ShowWindow(SW_HIDE);
 		dlg.DoModal();
 		this->ShowWindow(SW_SHOW);
@@ -62,8 +63,8 @@ void CSignUpDialog::OnBnClickedBack()
 void CSignUpDialog::OnBnClickedSignUp()
 {
 	UpdateData(TRUE);
-
-	if (m_strNickname.IsEmpty() || m_strUsername.IsEmpty() || m_strPassword.IsEmpty())
+	
+	if (m_strNickname.IsEmpty() || m_strUsername.IsEmpty() || m_strPassword.IsEmpty() || m_strEmail.IsEmpty())
 	{
 		m_ctrlError.SetWindowTextW(_T("빠짐없이 입력해주세요"));
 		return;
@@ -85,13 +86,61 @@ void CSignUpDialog::OnBnClickedSignUp()
 	if (AfxMessageBox(_T("진행하시겠습니까?"), MB_YESNO) == IDYES)
 	{
 		//TODO 
+		CT2CA convertedString(m_strUsername);
+		std::string id = std::string(convertedString);
+		CT2CA convertedStringpw(m_strPassword);
+		std::string pw = std::string(convertedStringpw);
+		CT2CA convertedStringpww(m_strNickname);
+		std::string nickname = std::string(convertedStringpww);
+		CT2CA convertedStringpwww(m_strEmail);
+		std::string email = std::string(convertedStringpwww);
 
-		
+		Protocol::C_MAKEACCOUNT sendpkt;
+		sendpkt.set_id(id);
+		sendpkt.set_pw(pw);
+		sendpkt.set_nickname(nickname);
+		sendpkt.set_email(email);
+
+		SendBufferRef snedBuffer = ServerPacketHandler::MakeUnReliableBuffer(sendpkt);
+		user.BlockSend(snedBuffer);
+		user.BlockRecv();
+
+		int32 code = GetSignUpCode();
 		CLoginDialog dlg;
-		this->ShowWindow(SW_HIDE);
-		dlg.DoModal();
-		this->ShowWindow(SW_SHOW);
-		EndDialog(IDOK);
+		switch (code)
+		{
+		case 0:
+			m_ctrlError.SetWindowTextW(_T("계정 생성 에러"));
+			break;
+		case 1: // 성공
+			AfxMessageBox(_T("생성 됐습니다"));
+			ShowWindow(SW_HIDE);
+			AfxGetApp()->m_pMainWnd = &dlg;
+			dlg.DoModal();
+			ShowWindow(SW_SHOW);
+			EndDialog(IDOK);
+			break;
+		case 2: // ID 동일한게 존재
+			m_ctrlError.SetWindowTextW(_T("기존 동일 ID 존재"));
+			break;
+		case 3: // ID 길이 문제
+			m_ctrlError.SetWindowTextW(_T("ID 길이가 너무 짧거나 깁니다"));
+			break;
+		case 4: // PW 길이문제
+			m_ctrlError.SetWindowTextW(_T("PW 길이가 너무 짧거나 깁니다"));
+			break;
+		case 5: // Nickname 길이문제
+			m_ctrlError.SetWindowTextW(_T("닉네임 길이가 너무 짧거나 깁니다"));
+			break;
+		case 6: // Email 동일 존재
+			m_ctrlError.SetWindowTextW(_T("기존 동일 Email 존재"));
+			break;
+		case 7:
+			m_ctrlError.SetWindowTextW(_T("Email을 입력해주세요"));
+		default:
+			break;
+		}
+		
 	}
 }
 

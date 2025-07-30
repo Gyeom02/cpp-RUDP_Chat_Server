@@ -28,7 +28,10 @@
     <Filter Include="MFC\Dialog\Main">
       <UniqueIdentifier>{eccba862-4a7b-470f-aab5-eff46a506eb4}</UniqueIdentifier>
     </Filter>
-    <Filter Include="MFC\Dialog\SignUp">
+    <Filter Include="MFC\Dialog\Login\Find">
+      <UniqueIdentifier>{4ce17395-7857-49e6-a70c-77dd257d7e61}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MFC\Dialog\Login\SignUp">
       <UniqueIdentifier>{d9c91cda-925b-416f-8827-aff9c26a61a2}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -67,7 +70,7 @@
       <Filter>Content</Filter>
     </ClCompile>
     <ClCompile Include="CSignUpDialog.cpp">
-      <Filter>MFC\Dialog\SignUp</Filter>
+      <Filter>MFC\Dialog\Login\SignUp</Filter>
     </ClCompile>
     <ClCompile Include="CClientApp.cpp">
       <Filter>MFC</Filter>
@@ -75,14 +78,17 @@
     <ClCompile Include="CAddFriendsDialog.cpp">
       <Filter>MFC\Dialog\Main</Filter>
     </ClCompile>
-    <ClCompile Include="CFindAccDialog.cpp">
-      <Filter>MFC\Dialog\Login</Filter>
-    </ClCompile>
     <ClCompile Include="CLoginDialog.cpp">
       <Filter>MFC\Dialog\Login</Filter>
     </ClCompile>
     <ClCompile Include="CMainDialog.cpp">
       <Filter>MFC\Dialog\Main</Filter>
+    </ClCompile>
+    <ClCompile Include="CRequestDialog.cpp">
+      <Filter>MFC\Dialog\Main</Filter>
+    </ClCompile>
+    <ClCompile Include="CFindIDDialog.cpp">
+      <Filter>MFC\Dialog\Login\Find</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -120,7 +126,7 @@
       <Filter>MFC</Filter>
     </ClInclude>
     <ClInclude Include="CSignUpDialog.h">
-      <Filter>MFC\Dialog\SignUp</Filter>
+      <Filter>MFC\Dialog\Login\SignUp</Filter>
     </ClInclude>
     <ClInclude Include="CClientApp.h">
       <Filter>MFC</Filter>
@@ -128,19 +134,33 @@
     <ClInclude Include="CAddFriendsDialog.h">
       <Filter>MFC\Dialog\Main</Filter>
     </ClInclude>
-    <ClInclude Include="CFindAccDialog.h">
-      <Filter>MFC\Dialog\Login</Filter>
-    </ClInclude>
     <ClInclude Include="CLoginDialog.h">
       <Filter>MFC\Dialog\Login</Filter>
     </ClInclude>
     <ClInclude Include="CMainDialog.h">
       <Filter>MFC\Dialog\Main</Filter>
     </ClInclude>
+    <ClInclude Include="CRequestDialog.h">
+      <Filter>MFC\Dialog\Main</Filter>
+    </ClInclude>
+    <ClInclude Include="CFindIDDialog.h">
+      <Filter>MFC\Dialog\Login\Find</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="DummyClient.rc">
       <Filter>MFC</Filter>
     </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Common\Protobuf\bin\Protocol.proto">
+      <Filter>Protocol</Filter>
+    </None>
+    <None Include="..\Common\Protobuf\bin\Struct.proto">
+      <Filter>Protocol</Filter>
+    </None>
+    <None Include="..\Common\Protobuf\bin\Enum.proto">
+      <Filter>Protocol</Filter>
+    </None>
   </ItemGroup>
 </Project>

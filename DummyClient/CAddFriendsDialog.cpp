@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "CAddFriendsDialog.h"
+#include "CMainDialog.h"
 
 BEGIN_MESSAGE_MAP(CAddFriendsDialog, CDialog)
 	ON_WM_CTLCOLOR()
@@ -120,3 +121,10 @@ void CAddFriendsDialog::OnBnClickedAdd()
 }
 
 
+void CAddFriendsDialog::OnCancel()
+{
+	CMainDialog* mainDlg = dynamic_cast<CMainDialog*>(ownerDialog);
+	if (mainDlg)
+		AfxGetApp()->m_pMainWnd = mainDlg;
+	CDialog::OnCancel();
+}

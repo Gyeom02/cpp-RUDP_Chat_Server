@@ -2,12 +2,16 @@
 #include "CMainDialog.h"
 #include "CLoginDialog.h"
 #include "CAddFriendsDialog.h"
+#include "PlayerManager.h"
+#include "CRequestDialog.h"
 
 BEGIN_MESSAGE_MAP(CMainDialog, CDialog)
 	ON_WM_CTLCOLOR()
 	ON_BN_CLICKED(IDC_BUTTON_SEND, &CMainDialog::OnBnClickedSend)
 	ON_BN_CLICKED(IDC_BUTTON_LOGOUT, &CMainDialog::OnBnClickedLogout)
 	ON_BN_CLICKED(IDC_BUTTON_ADDFRIENDS, &CMainDialog::OnBnClickedAddFriends)
+	ON_BN_CLICKED(IDC_BTN_FRIEND_REQUEST, & CMainDialog::OnBnClickedFriendRequest)
+	ON_LBN_SELCHANGE(IDC_LIST_FRIENDS, &CMainDialog::OnLbnSelchangeListFriends)
 
 END_MESSAGE_MAP()
 
@@ -15,6 +19,8 @@ END_MESSAGE_MAP()
 CMainDialog::CMainDialog(CWnd* pParent)
 	:CDialog(IDD_DIALOG_MAIN, pParent)
 {
+	
+	
 }
 
 
@@ -33,6 +39,8 @@ BOOL CMainDialog::OnInitDialog()
 {
 	CDialog::OnInitDialog();
 
+	SetDlgItemText(IDC_USER_NICKNAME, CString(user.GetNickName().c_str()));
+
 	m_bgBrush.CreateSolidBrush(COLOR_BACKGROUND);
 	m_darker.CreateSolidBrush(COLOR_BACKGROUND_DARKER);
 
@@ -46,14 +54,20 @@ BOOL CMainDialog::OnInitDialog()
 	m_btnLogout.SetTextColor(RGB(255, 255, 255));
 
 	m_btnSend.SubclassDlgItem(IDC_BUTTON_SEND, this);
-	m_btnSend.SetFaceColor(RGB(39, 174, 96), TRUE);
+	m_btnSend.SetFaceColor(COLOR_DARKER_BUTTON, TRUE);
 	m_btnSend.SetTextColor(RGB(255, 255, 255));
 
 	m_btnAddFriends.SubclassDlgItem(IDC_BUTTON_ADDFRIENDS, this);
 	m_btnAddFriends.SetFaceColor(COLOR_BUTTON, TRUE);
 	m_btnAddFriends.SetTextColor(RGB(255, 255, 255));
 
+	
+	m_btnFriendRequets.SubclassDlgItem(IDC_BTN_FRIEND_REQUEST, this);
+	m_btnFriendRequets.SetFaceColor(COLOR_BUTTON, TRUE);
+	m_btnFriendRequets.SetTextColor(RGB(255, 255, 255));
 
+	GetDlgItem(IDC_EDIT_CHATINPUT)->ShowWindow(SW_HIDE);
+	GetDlgItem(IDC_BUTTON_SEND)->ShowWindow(SW_HIDE);
 	return TRUE;
 }
 
@@ -62,11 +76,16 @@ void CMainDialog::OnBnClickedSend()
 	CString strmessage;
 	m_editChatInput.GetWindowText(strmessage);
 	
+	
 	if (!strmessage.IsEmpty())
 	{
 		CString logEntry = _T("나: ") + strmessage;
+
+		m_chatLogs[m_currentTarget].push_back(logEntry);
 		m_listChatLog.AddString(logEntry);
 		m_editChatInput.SetWindowText(_T(""));
+
+		//TODO UDP Send 
 	}
 }
 
@@ -75,6 +94,7 @@ void CMainDialog::OnBnClickedLogout()
 	if (AfxMessageBox(_T("로그아웃 하시겠습니까?"), MB_YESNO) == IDYES)
 	{
 		CLoginDialog dlg;
+		AfxGetApp()->m_pMainWnd = &dlg;
 		this->ShowWindow(SW_HIDE);
 		dlg.DoModal();
 		this->ShowWindow(SW_SHOW);
@@ -85,8 +105,49 @@ void CMainDialog::OnBnClickedLogout()
 void CMainDialog::OnBnClickedAddFriends()
 {
 	CAddFriendsDialog dlg;
+	AfxGetApp()->m_pMainWnd = &dlg;
+	dlg.ownerDialog = this;
 	dlg.DoModal();
 	
+}
+
+void CMainDialog::OnLbnSelchangeListFriends()
+{
+	int nIndex = m_listFriends.GetCurSel();
+	if (nIndex != LB_ERR)
+	{
+		if (!bStartedChat)
+		{
+			bStartedChat = true;
+			GetDlgItem(IDC_EDIT_CHATINPUT)->ShowWindow(SW_SHOW);
+			GetDlgItem(IDC_BUTTON_SEND)->ShowWindow(SW_SHOW);
+		}
+		CString strFriend;
+		m_listFriends.GetText(nIndex, strFriend);
+		m_currentTarget = strFriend;
+
+		m_listChatLog.ResetContent();
+
+		if (m_chatLogs.count(m_currentTarget))
+		{
+			for (const auto& msg : m_chatLogs[m_currentTarget])
+				m_listChatLog.AddString(msg);
+		}
+		else
+		{
+			CString welcome;
+			welcome.Format(_T("%s 님과의 대화를 시작합니다."), m_currentTarget);
+			m_listChatLog.AddString(welcome);
+		}
+	}
+}
+
+void CMainDialog::OnBnClickedFriendRequest()
+{
+	CRequestDialog dlg;
+	AfxGetApp()->m_pMainWnd = &dlg;
+	dlg.ownerDlg = this;
+	dlg.DoModal();
 }
 
 HBRUSH CMainDialog::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor)

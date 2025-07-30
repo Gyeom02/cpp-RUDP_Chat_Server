@@ -2,6 +2,10 @@
 #include "ServerPacketHandler.h"
 #include "Player.h"
 #include "PlayerManager.h"
+#include "CLoginDialog.h"
+#include "CMainDialog.h"
+#include "CSignUpDialog.h"
+#include "CFindIDDialog.h"
 
 PacketHandlerFunc GPacketHandler[UINT16_MAX];
 
@@ -31,23 +35,44 @@ bool Handle_S_DISCONNECT(UDPSocketPtr udpSocket, NetAddress netAddress, PacketHe
 {
 	return false;
 }
-bool Handle_S_INIT(UDPSocketPtr udpSocket, NetAddress netAddress, PacketHeader* header, Protocol::S_INIT& pkt)
-{
-	PlayerRef _player = MakeShared<Player>(pkt.id());
-	_player->ownerSocket = GUDP.GetUDPSocket(0)->shared_from_this();
-	_player->netAddress = _player->ownerSocket->GetNetAddress();
-	GPlayerManager.Add(pkt.id(), _player);
-	
-	GQoS->GetShard(pkt.id())->MakeQoSPlayer(pkt.id());
-	
-	//PlayerRef player = GPlayerManager.GetPlayer();
-	
-	_player->playerId.store(int32(pkt.id()));
-	cout << "Handle_S_INIT : " << _player->playerId.load() << endl;
-	return true;
-}
+
 bool Handle_S_LOGIN(UDPSocketPtr udpSocket, NetAddress netAddress, PacketHeader* header, Protocol::S_LOGIN& pkt)
 {
+	CLoginDialog* pDlg = dynamic_cast<CLoginDialog*>(AfxGetMainWnd());
+	if (pDlg)
+	{
+		int32 success = pkt.bsuccess();
+		switch (success)
+		{
+		case 0: // fail
+			pDlg->m_ctrlError.SetWindowTextW(_T("로그인 실패 : 올바르지 않은 ID 또는 비밀번호"));
+
+			break;
+		case 1: // success
+			//user.playerId = pkt.primid();
+			user.SetNickName(pkt.nickname());
+			//GPlayerManager.Add(pkt.primid(), _player);
+
+			GQoS->GetShard(pkt.primid())->MakeQoSPlayer(pkt.primid());
+
+			//PlayerRef player = GPlayerManager.GetPlayer();
+
+			user.playerId.store(int32(pkt.primid()));
+			//cout << "Handle_S_INIT : " << _player->playerId.load() << endl;
+
+			CMainDialog dlg;
+			AfxGetApp()->m_pMainWnd = &dlg;
+			pDlg->ShowWindow(SW_HIDE);
+			dlg.DoModal();
+			pDlg->ShowWindow(SW_SHOW);
+			pDlg->EndDialog(IDOK);
+		}
+
+	}
+	else
+	{
+		AfxMessageBox(_T("Main Dialog is not current diaog"));
+	}
 	//if (pkt.success() == false)
 	//	return true;
 
@@ -64,57 +89,54 @@ bool Handle_S_LOGIN(UDPSocketPtr udpSocket, NetAddress netAddress, PacketHeader*
 
 	return true;
 }
-bool Handle_S_ENTER_GAME(UDPSocketPtr udpSocket, NetAddress netAddress, PacketHeader* header, Protocol::S_ENTER_GAME& pkt)
+bool Handle_S_MAKEACCOUNT(UDPSocketPtr udpSocket, NetAddress clientAddr, PacketHeader* header, Protocol::S_MAKEACCOUNT& pkt)
 {
-	return false;
+
+	CSignUpDialog* pDlg = dynamic_cast<CSignUpDialog*>(AfxGetMainWnd());
+	if (pDlg == nullptr)
+
+	{
+		AfxMessageBox(_T("Handle_S_MAKEACCOUNT : 현재 다이로그가 올바르지 않음"));
+		return false;
+	}
+	
+	pDlg->SetSignUpCode(pkt.code());
+
+	return true;
+	//TODO 아이디 중복된 아이디 또는 다른 에러처리 (길이 문제는 클라이언트쪽에서 처리하도록 변경)
 }
-bool Handle_S_MSG(UDPSocketPtr udpSocket, NetAddress netAddress, PacketHeader* header, Protocol::S_MSG& pkt)
+bool Handle_S_FINDACCOUNT(UDPSocketPtr udpSocket, NetAddress clientAddr, PacketHeader* header, Protocol::S_FINDACCOUNT& pkt)
 {
-	//std::cout << pkt.msg() << endl;
-//	GPlayerManager._recvPacketNum++;
+
+	CFindIdDialog* pDlg = dynamic_cast<CFindIdDialog*>(AfxGetMainWnd());
+	if (pDlg == nullptr)
+
+	{
+		AfxMessageBox(_T("Handle_S_FINDACCOUNT : 현재 다이로그가 올바르지 않음"));
+		return false;
+	}
+
+	pDlg->SetFindCode(pkt.code());
+	pDlg->SetFindID(pkt.id());
+	return true;
+	//TODO 아이디 중복된 아이디 또는 다른 에러처리 (길이 문제는 클라이언트쪽에서 처리하도록 변경)
+}
+
+
+/*
+bool Handle_S_INIT(UDPSocketPtr udpSocket, NetAddress netAddress, PacketHeader* header, Protocol::S_INIT& pkt)
+{
+	PlayerRef _player = MakeShared<Player>(pkt.id());
+	_player->ownerSocket = GUDP.GetUDPSocket(0)->shared_from_this();
+	_player->netAddress = _player->ownerSocket->GetNetAddress();
+	GPlayerManager.Add(pkt.id(), _player);
+
+	GQoS->GetShard(pkt.id())->MakeQoSPlayer(pkt.id());
+
+	//PlayerRef player = GPlayerManager.GetPlayer();
+
+	_player->playerId.store(int32(pkt.id()));
+	cout << "Handle_S_INIT : " << _player->playerId.load() << endl;
 	return true;
 }
-bool Handle_S_MAKEROOM(UDPSocketPtr udpSocket, NetAddress netAddress, PacketHeader* header, Protocol::S_MAKEROOM& pkt)
-{
-	return false;
-}
-bool Handle_S_ENTERROOM(UDPSocketPtr udpSocket, NetAddress netAddress, PacketHeader* header, Protocol::S_ENTERROOM& pkt)
-{
-	return false;
-}
-bool Handle_S_NEWPLAYER(UDPSocketPtr udpSocket, NetAddress netAddress, PacketHeader* header, Protocol::S_NEWPLAYER& pkt)
-{
-	return false;
-}
-bool Handle_S_MOVETEAM(UDPSocketPtr udpSocket, NetAddress netAddress, PacketHeader* header, Protocol::S_MOVETEAM& pkt)
-{
-	return false;
-}
-bool Handle_S_LEAVEROOM(UDPSocketPtr udpSocket, NetAddress netAddress, PacketHeader* header, Protocol::S_LEAVEROOM& pkt)
-{
-	return false;
-}
-bool Handle_S_CHANGETEAMMODE(UDPSocketPtr udpSocket, NetAddress netAddress, PacketHeader* header, Protocol::S_CHANGETEAMMODE& pkt)
-{
-	return false;
-}
-bool Handle_S_MOVESELECTROOM(UDPSocketPtr udpSocket, NetAddress netAddress, PacketHeader* header, Protocol::S_MOVESELECTROOM& pkt)
-{
-	return false;
-}
-bool Handle_S_CHANGECHARAC(UDPSocketPtr udpSocket, NetAddress netAddress, PacketHeader* header, Protocol::S_CHANGECHARAC& pkt)
-{
-	return false;
-}
-bool Handle_S_READY(UDPSocketPtr udpSocket, NetAddress netAddress, PacketHeader* header, Protocol::S_READY& pkt)
-{
-	return false;
-}
-bool Handle_S_STARTGAME(UDPSocketPtr udpSocket, NetAddress netAddress, PacketHeader* header, Protocol::S_STARTGAME& pkt)
-{
-	return false;
-}
-bool Handle_S_SENDIMPORT(UDPSocketPtr udpSocket, NetAddress netAddress, PacketHeader* header, Protocol::S_SENDIMPORT& pkt)
-{
-	return false;
-}
+*/

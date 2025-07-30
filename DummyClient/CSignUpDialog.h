@@ -21,19 +21,26 @@ public:
     CString m_strNickname;
     CString m_strUsername;
     CString m_strPassword;
+    CString m_strEmail;
 
     CEdit m_EditNickname;
     CEdit m_Editusername;
 
     afx_msg void OnBnClickedSignUp();
     afx_msg void OnBnClickedBack();
-protected:
+
+    void SetSignUpCode(int32 code) { SignUpCodeFromDB = code; }
+    int32 GetSignUpCode() { return SignUpCodeFromDB; }
+
+public:
     CBrush m_bgBrush;
 
     CMFCButton m_btnBack;
     CMFCButton m_btnSignUp;
     CStatic m_ctrlError;
 
+private:
+    int32 SignUpCodeFromDB = -1;
     
 };
 

@@ -75,9 +75,12 @@ public:
 
 	DeliveryManagerRef GetDeliveryManager() { return deliveryManager; }
 
+	int32 BlockSend(SendBufferRef sendBuffer);
+	int32 BlockRecv();
 private:
 	USE_LOCK;
 	DeliveryManagerRef deliveryManager;
 	string	_nickname;
 };
 
+extern Player user;
