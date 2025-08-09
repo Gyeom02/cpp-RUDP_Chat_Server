@@ -32,6 +32,8 @@ BOOL CLoginDialog::OnInitDialog()
 {
 	CDialog::OnInitDialog();
 
+	user->SetCurDialog(this);
+
 	m_ctrlError.SubclassDlgItem(IDC_STATIC_ERROR, this);
 	m_ctrlError.SetWindowTextW(_T(""));
 
@@ -130,9 +132,9 @@ void CLoginDialog::OnBnClickedLogin()
 	pkt.set_pw(pw);
 	SendBufferRef sendBuffer = ServerPacketHandler::MakeUnReliableBuffer(pkt);
 	
-	user.BlockSend(sendBuffer);
+	user->BlockSend(sendBuffer);
 
-	user.BlockRecv();
+	user->BlockRecv();
 }
 
 void CLoginDialog::OnBnClickedSignup()

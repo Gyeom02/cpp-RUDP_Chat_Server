@@ -119,6 +119,9 @@
     <ClInclude Include="SQL_query.h">
       <Filter>DB</Filter>
     </ClInclude>
+    <ClInclude Include="MakeFriendCode.h">
+      <Filter>DB</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Common\Protobuf\bin\Enum.proto">

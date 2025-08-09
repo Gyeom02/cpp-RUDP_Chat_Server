@@ -56,6 +56,8 @@ public:
 	void SetImport(Position _pos, Rotation _rot, Velocity _vel);
 	void SetNickName(string nickname);
 	string GetNickName();
+	void SetFriendCode(string nickname);
+	string GetFriendCode();
 
 	atomic<int32>					playerId = 0;
 	atomic<int32>					roomId	 = -1;
@@ -77,10 +79,15 @@ public:
 
 	int32 BlockSend(SendBufferRef sendBuffer);
 	int32 BlockRecv();
+
+	void SetCurDialog(CDialog* dialog) { USE_LOCK;  _currentDialog = dialog; }
+	CDialog* GetCurDialog() { USE_LOCK; return _currentDialog; }
 private:
 	USE_LOCK;
 	DeliveryManagerRef deliveryManager;
 	string	_nickname;
+	string _friendcode;
+	CDialog* _currentDialog;
 };
 
-extern Player user;
+extern PlayerRef user;

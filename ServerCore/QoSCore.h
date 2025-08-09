@@ -61,6 +61,7 @@ public:
 	void ErasePlayer(int32 playerId);
 	void Push(int32 playerid, ObjectRef object, SendBufferRef packet);
 	void DoWork();
+	void Run();
 	void Stop() { running = false; }
 private:
 	unordered_map<int32, shared_ptr<QoSPlayer>> _qosPlayers;

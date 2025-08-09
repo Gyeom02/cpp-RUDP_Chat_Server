@@ -2,7 +2,6 @@
 #include "PlayerManager.h"
 #include "Player.h"
 PlayerManager GPlayerManager;
-
 void PlayerManager::Add(int32 id, PlayerRef player)
 {
 	WRITE_LOCK;
@@ -32,7 +31,7 @@ PlayerRef PlayerManager::GetPlayer(int32 id)
 	auto player = _players.find(id);
 	if (player == _players.end()) // 존재하지않음
 		return nullptr;
-	
+
 	return (player->second);
 }
 
@@ -56,3 +55,4 @@ void PlayerManager::PushID(int32 id)
 
 	_listOfReuseID.push(id);
 }
+

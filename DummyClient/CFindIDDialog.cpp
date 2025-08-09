@@ -22,6 +22,8 @@ BOOL CFindIdDialog::OnInitDialog()
 {
 	CDialog::OnInitDialog();
 
+	user->SetCurDialog(this);
+
 	m_bgBrush.CreateSolidBrush(COLOR_BACKGROUND);
 
 	m_findBtn.SubclassDlgItem(IDC_BTN_SEARCH_ID, this);
@@ -107,8 +109,8 @@ void CFindIdDialog::OnBnClickedFind()
 		sendpkt.set_email(email);
 
 		SendBufferRef snedBuffer = ServerPacketHandler::MakeUnReliableBuffer(sendpkt);
-		user.BlockSend(snedBuffer);
-		user.BlockRecv();
+		user->BlockSend(snedBuffer);
+		user->BlockRecv();
 
 		int32 code = GetFindCode();
 		CLoginDialog dlg;

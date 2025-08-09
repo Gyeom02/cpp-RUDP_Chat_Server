@@ -27,6 +27,37 @@ void CRequestDialog::OnCancel()
 		AfxGetApp()->m_pMainWnd = mainDlg;
 	CDialog::OnCancel();
 }
+void CRequestDialog::FreshRequestsList()
+{
+	for (auto& r : _requests)
+	{
+		m_listFriendRequests.AddString(CString(r._nickname.c_str()));
+	}
+}
+void CRequestDialog::AddRequest(int32 id, string name)
+{
+	WRITE_LOCK;
+	_requests.push_back(Request(id, name));
+}
+void CRequestDialog::AddRequests(vector<Request>& request)
+{
+	WRITE_LOCK;
+	for (auto& v : request)
+	{
+		_requests.push_back(v);
+	}
+}
+void CRequestDialog::ApplyRequestPkt(int32 index, int32 bsuccess)
+{
+	if (bsuccess == 1) // 성공했다
+	{
+		m_listFriendRequests.DeleteString(index);
+	}
+	else
+	{
+		AfxMessageBox(_T("C_REQUESTRESPONSE FAILD"));
+	}
+}
 void CRequestDialog::DoDataExchange(CDataExchange* pDX)
 {
 	CDialog::DoDataExchange(pDX);
@@ -38,8 +69,15 @@ void CRequestDialog::DoDataExchange(CDataExchange* pDX)
 BOOL CRequestDialog::OnInitDialog()
 {
 	CDialog::OnInitDialog();
-	m_listFriendRequests.AddString(_T("user1"));
-	m_listFriendRequests.AddString(_T("user2"));
+
+	user->SetCurDialog(this);
+
+	Protocol::C_GETFRIENDREQUEST sendpkt;
+	sendpkt.set_primid(to_string(user->playerId));
+	SendBufferRef sendbuffer = ServerPacketHandler::MakeReliableBuffer(sendpkt, QoSCore::HIGH);
+	user->Send(sendbuffer);
+
+	FreshRequestsList();
 
 	m_bgBrush.CreateSolidBrush(COLOR_BACKGROUND);
 	m_darker.CreateSolidBrush(COLOR_BACKGROUND_DARKER);
@@ -93,9 +131,20 @@ void CRequestDialog::OnBnClickedAccept()
 	int sel = m_listFriendRequests.GetCurSel();
 	if (sel != LB_ERR)
 	{
-		CString name;
+		Request request = _requests[sel];
+		Protocol::C_REQUESTRESPONSE sendpkt;
+		sendpkt.set_primid(to_string(user->playerId));
+		sendpkt.set_fprimid(to_string(request._id));
+		sendpkt.set_response(1);
+		sendpkt.set_listindex(sel);
+		SendBufferRef sendbuffer = ServerPacketHandler::MakeReliableBuffer(sendpkt, QoSCore::HIGH);
+		user->Send(sendbuffer);
+
+		//TODO 패킷 통신 성공 여부 확인 및 UI 처리
+
+		/*CString name;
 		m_listFriendRequests.GetText(sel, name);
-		AfxMessageBox(name + _T(" 친구 요청 수락"));
+		AfxMessageBox(name + _T(" 친구 요청 수락"));*/
 	}
 }
 
@@ -104,8 +153,14 @@ void CRequestDialog::OnBnClickedReject()
 	int sel = m_listFriendRequests.GetCurSel();
 	if (sel != LB_ERR)
 	{
-		CString name;
-		m_listFriendRequests.GetText(sel, name);
-		AfxMessageBox(name + _T(" 친구 요청 거절"));
+		Request request = _requests[sel];
+		Protocol::C_REQUESTRESPONSE sendpkt;
+		sendpkt.set_primid(to_string(user->playerId));
+		sendpkt.set_fprimid(to_string(request._id));
+		sendpkt.set_response(0);
+		sendpkt.set_listindex(sel);
+		SendBufferRef sendbuffer = ServerPacketHandler::MakeReliableBuffer(sendpkt, QoSCore::HIGH);
+		user->Send(sendbuffer);
+
 	}
 }

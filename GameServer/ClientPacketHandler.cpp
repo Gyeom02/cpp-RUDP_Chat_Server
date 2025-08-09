@@ -59,7 +59,7 @@ bool Handle_C_DISCONNECT(UDPSocketPtr udpSocket, NetAddress clientAddr, PacketHe
 	//PlayerManager Release
 	GPlayerManager.Remove(id);
 	// ID Reuse Setting
-	GPlayerManager.PushID(id);
+	//GPlayerManager.PushID(id);
 	GQoS->ErasePlayer(id);
 	//Room Release
 	if (roomid == -1) // 방에 들어가있지 않음
@@ -100,21 +100,23 @@ bool Handle_C_LOGIN(UDPSocketPtr udpSocket, NetAddress clientAddr, PacketHeader*
 	
 	string getNickname;
 	int32 getPrimId;
-
+	string getfriendcode;
 	Protocol::S_LOGIN pktt;
 
 	PlayerRef playerRef = nullptr;
 
-	if (DBManager::Instance().LoginUser(pkt.id(), pkt.pw(), getPrimId, getNickname))
+	if (DBManager::Instance().LoginUser(pkt.id(), pkt.pw(), getPrimId, getNickname, getfriendcode))
 	{
 		pktt.set_bsuccess(1);
 
 		
 		pktt.set_primid(getPrimId);
 		pktt.set_nickname(getNickname);
-
+		pktt.set_friendcode(getfriendcode);
 		playerRef = MakeShared<Player>(getPrimId);
+		GQoS->GetShard(getPrimId)->MakeQoSPlayer(getPrimId);
 		GPlayerManager.Add(getPrimId, playerRef);
+		
 	}
 	else
 	{
@@ -165,6 +167,142 @@ bool Handle_C_MAKEACCOUNT(UDPSocketPtr udpSocket, NetAddress clientAddr, PacketH
 	SendBufferRef sendBuffer = ClientPacketHandler::MakeUnReliableBuffer(sendpkt);
 	playerRef->Send(sendBuffer);
 	return false;
+}
+
+bool Handle_C_REQUESTFRIEND(UDPSocketPtr udpSocket, NetAddress clientAddr, PacketHeader* header, Protocol::C_REQUESTFRIEND& pkt)
+{
+	int32 result = DBManager::Instance().RequestFriend(pkt.friendcode(), pkt.primid());
+	//cout << "FriendCode : " << pkt.friendcode() << endl;
+	Protocol::S_REQUESTFRIEND sendpkt;
+	sendpkt.set_bsuccess(result);
+	SendBufferRef sendbuffer = ClientPacketHandler::MakeReliableBuffer(sendpkt, QoSCore::HIGH);
+
+	GPlayerManager.GetPlayer(atoi(pkt.primid().c_str()))->Send(sendbuffer);
+	return true;
+}
+
+bool Handle_C_GETFRIENDREQUEST(UDPSocketPtr udpSocket, NetAddress clientAddr, PacketHeader* header, Protocol::C_GETFRIENDREQUEST& pkt)
+{
+	Protocol::S_GETFRIENDREQUEST sendpkt;
+	vector<int32> _ids;
+	vector<string> _names;
+	if (DBManager::Instance().GetRequests(pkt.primid(), _ids, _names))
+	{
+		for (int32 i = 0; i < _ids.size(); i++)
+		{
+			Protocol::Friend* f1 = sendpkt.add_requests();
+			f1->set_primdid(_ids[i]);
+			f1->set_nickname(_names[i]);
+		}
+		SendBufferRef sendbuffer = ClientPacketHandler::MakeReliableBuffer(sendpkt, QoSCore::HIGH);
+		GPlayerManager.GetPlayer(atoi(pkt.primid().c_str()))->Send(sendbuffer);
+
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+	
+	
+}
+
+bool Handle_C_REQUESTRESPONSE(UDPSocketPtr udpSocket, NetAddress clientAddr, PacketHeader* header, Protocol::C_REQUESTRESPONSE& pkt)
+{
+
+	Protocol::S_REQUESTRESPONSE sendpkt;
+	if (DBManager::Instance().ReplyRequest(pkt.primid(), pkt.fprimid(), to_string(pkt.response())))
+	{
+		
+		sendpkt.set_bsuccess(1);
+		
+	}
+	else
+	{
+		sendpkt.set_bsuccess(0);
+	
+	}
+	sendpkt.set_listindex(pkt.listindex());
+	SendBufferRef sendbuffer = ClientPacketHandler::MakeReliableBuffer(sendpkt, QoSCore::HIGH);
+	GPlayerManager.GetPlayer(atoi(pkt.primid().c_str()))->Send(sendbuffer);
+
+	
+	return true;
+}
+
+bool Handle_C_GETFRIENDS(UDPSocketPtr udpSocket, NetAddress clientAddr, PacketHeader* header, Protocol::C_GETFRIENDS& pkt)
+{
+	Protocol::S_GETFRIENDS sendpkt;
+	vector<int32> _ids;
+	vector<string> _names;
+	if (DBManager::Instance().GetFriends(pkt.primid(), _ids, _names))
+	{
+		for (int32 i = 0; i < _ids.size(); i++)
+		{
+			Protocol::Friend* f1 = sendpkt.add_friends();
+			f1->set_primdid(_ids[i]);
+			f1->set_nickname(_names[i]);
+		}
+		SendBufferRef sendbuffer = ClientPacketHandler::MakeReliableBuffer(sendpkt, QoSCore::HIGH);
+		GPlayerManager.GetPlayer(atoi(pkt.primid().c_str()))->Send(sendbuffer);
+
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+bool Handle_C_SENDMSG(UDPSocketPtr udpSocket, NetAddress clientAddr, PacketHeader* header, Protocol::C_SENDMSG& pkt)
+{
+	Protocol::S_SENDMSG sendpkt;
+	sendpkt.set_from_id(pkt.from_id());
+	sendpkt.set_to_id(pkt.to_id());
+	sendpkt.set_listindex(pkt.listindex());
+	SendBufferRef sendbuffer = nullptr;
+	if (DBManager::Instance().SetMsg(pkt.from_id(), pkt.to_id(), pkt.msg()))
+	{
+		sendpkt.set_msg(pkt.msg());
+
+		sendbuffer = ClientPacketHandler::MakeReliableBuffer(sendpkt, QoSCore::HIGH);
+	
+		PlayerRef receiver = GPlayerManager.GetPlayer(atoi(pkt.to_id().c_str()));
+		if (receiver) // 유저가 서버에 접속해있음
+			receiver->Send(sendbuffer);
+	}
+	else
+	{
+		sendpkt.set_msg("전송실패");
+		sendbuffer = ClientPacketHandler::MakeReliableBuffer(sendpkt, QoSCore::HIGH);	
+	}
+	GPlayerManager.GetPlayer(atoi(pkt.from_id().c_str()))->Send(sendbuffer);
+
+	return true;
+}
+
+bool Handle_C_GETCHATLOG(UDPSocketPtr udpSocket, NetAddress clientAddr, PacketHeader* header, Protocol::C_GETCHATLOG& pkt)
+{
+	Protocol::S_GETCHATLOG sendpkt;
+	vector<int32> _ids;
+	vector<string> _chats;
+	if (DBManager::Instance().GetChats(pkt.primid(), pkt.to_id(), _ids, _chats))
+	{
+		for (int32 i = 0; i < _ids.size(); i++)
+		{
+			Protocol::ChatLog* f1 = sendpkt.add_logs();
+			f1->set_primid(_ids[i]);
+			f1->set_msg(_chats[i]);
+		}
+		SendBufferRef sendbuffer = ClientPacketHandler::MakeReliableBuffer(sendpkt, QoSCore::HIGH);
+		GPlayerManager.GetPlayer(atoi(pkt.primid().c_str()))->Send(sendbuffer);
+
+		return true;
+	}
+	else
+	{
+		return false;
+	}
 }
 
 /*bool Handle_C_INIT(UDPSocketPtr udpSocket, NetAddress clientAddr, PacketHeader* header, Protocol::C_INIT& pkt)

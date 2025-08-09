@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "Player.h"
 
-Player user(0);
+PlayerRef user = make_shared<Player>(0);
 Player::Player(int32 id) 
 	: playerId(id), roomId(-1), roomprimid(-1), teamNum(-1)
 {
@@ -34,6 +34,18 @@ string Player::GetNickName()
 {
 	READ_LOCK;
 	return _nickname;
+}
+
+void Player::SetFriendCode(string nickname)
+{
+	WRITE_LOCK;
+	_friendcode = nickname;
+}
+
+string Player::GetFriendCode()
+{
+	READ_LOCK;
+	return _friendcode;
 }
 
 

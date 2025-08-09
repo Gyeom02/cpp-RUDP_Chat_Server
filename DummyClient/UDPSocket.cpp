@@ -64,8 +64,8 @@ void UDPSocket::UDPWork()
 					break;
 				if (header->priority != QoSCore::FPC && header->breliable && header->id != PKT_C_RUDPACK && header->id != PKT_S_RUDPACK)
 				{
-					PlayerRef player = GPlayerManager.GetPlayer(header->playerId);
-					if (player->GetDeliveryManager()->ProcessSequenceNumber(header->sn) == false)
+					//PlayerRef player = GPlayerManager.GetPlayer(header->playerId);
+					if (user->GetDeliveryManager()->ProcessSequenceNumber(header->sn) == false)
 					{
 						processLen += header->size;
 						continue;
@@ -107,7 +107,9 @@ int32 UDPSocket::Send(PlayerRef player, SendBufferRef sendBuffer)
 		FPCSend(player, sendBuffer);
 		return 0;
 	}
-	GQoS->Push(player->playerId, player, sendBuffer);
+	//GQoS->Push(player->playerId, player, sendBuffer);
+	//Client쪽에는 한개의 pakcet만 사용하므로 바로 보내는걸로 결정했다
+	PriortySend(player, sendBuffer);
 	return 0;
 }
 

@@ -39,14 +39,16 @@ BOOL CMainDialog::OnInitDialog()
 {
 	CDialog::OnInitDialog();
 
-	SetDlgItemText(IDC_USER_NICKNAME, CString(user.GetNickName().c_str()));
+	user->SetCurDialog(this);
+
+	SetDlgItemText(IDC_USER_NICKNAME, CString(user->GetNickName().c_str()));
+	SetDlgItemText(IDC_USER_FRIENDCODE, CString(user->GetFriendCode().c_str()));
 
 	m_bgBrush.CreateSolidBrush(COLOR_BACKGROUND);
 	m_darker.CreateSolidBrush(COLOR_BACKGROUND_DARKER);
 
-
-	m_listFriends.AddString(_T("친구 1"));
-	m_listFriends.AddString(_T("친구 2"));
+	
+	SendGetFriends();
 	
 
 	m_btnLogout.SubclassDlgItem(IDC_BUTTON_LOGOUT, this);
@@ -75,16 +77,19 @@ void CMainDialog::OnBnClickedSend()
 {
 	CString strmessage;
 	m_editChatInput.GetWindowText(strmessage);
-	
+	int32 friendindex = m_listFriends.GetCurSel();
 	
 	if (!strmessage.IsEmpty())
 	{
-		CString logEntry = _T("나: ") + strmessage;
-
-		m_chatLogs[m_currentTarget].push_back(logEntry);
-		m_listChatLog.AddString(logEntry);
+		Protocol::C_SENDMSG sendpkt;
+		sendpkt.set_from_id(to_string(user->playerId));
+		sendpkt.set_to_id(to_string(_friends[friendindex]._primid));
+		sendpkt.set_msg(string(CT2CA(strmessage)));
+		sendpkt.set_listindex(friendindex);
+		SendBufferRef sendbuffer = ServerPacketHandler::MakeReliableBuffer(sendpkt, QoSCore::HIGH);
+		user->Send(sendbuffer);
+		
 		m_editChatInput.SetWindowText(_T(""));
-
 		//TODO UDP Send 
 	}
 }
@@ -128,16 +133,22 @@ void CMainDialog::OnLbnSelchangeListFriends()
 
 		m_listChatLog.ResetContent();
 
-		if (m_chatLogs.count(m_currentTarget))
+		if (m_chatLogs.count(nIndex))
 		{
-			for (const auto& msg : m_chatLogs[m_currentTarget])
+			for (const auto& msg : m_chatLogs[nIndex])
 				m_listChatLog.AddString(msg);
 		}
 		else
 		{
-			CString welcome;
+			Protocol::C_GETCHATLOG sendpkt;
+			sendpkt.set_primid(to_string(user->playerId));
+			sendpkt.set_to_id(to_string(_friends[nIndex]._primid));
+			sendpkt.set_listindex(nIndex);
+			SendBufferRef sendbuffer = ServerPacketHandler::MakeReliableBuffer(sendpkt, QoSCore::HIGH);
+			user->Send(sendbuffer);
+			/*CString welcome;
 			welcome.Format(_T("%s 님과의 대화를 시작합니다."), m_currentTarget);
-			m_listChatLog.AddString(welcome);
+			m_listChatLog.AddString(welcome);*/
 		}
 	}
 }
@@ -196,5 +207,69 @@ BOOL CMainDialog::PreTranslateMessage(MSG* pMsg)
 		return TRUE;
 	}
 	return CDialog::PreTranslateMessage(pMsg);
+}
+
+void CMainDialog::ReFreshFriendList()
+{
+	m_listFriends.ResetContent();
+	for (int i = 0; i < _friends.size(); i++)
+	{
+		m_listFriends.AddString(CString(_friends[i]._nickname.c_str()));
+	}
+}
+
+void CMainDialog::AddFriends(vector<Friend>& friends)
+{
+	WRITE_LOCK;
+	_friends = friends;
+}
+
+void CMainDialog::AddFriend(Friend _friend)
+{
+	WRITE_LOCK;
+	_friends.push_back(_friend);
+}
+
+void CMainDialog::SendGetFriends()
+{
+	Protocol::C_GETFRIENDS sendpkt;
+	sendpkt.set_primid(to_string(user->playerId));
+	SendBufferRef sendbuffer = ServerPacketHandler::MakeReliableBuffer(sendpkt, QoSCore::HIGH);
+	user->Send(sendbuffer);
+}
+
+int32 CMainDialog::FindFriendIndex(int32 primid)
+{
+	for (int32 i = 0 ; i < _friends.size(); i ++)
+	{
+		auto& f = _friends[i];
+		if (f._primid == primid)
+		{
+			return i;
+		}
+	}
+	return -1;
+}
+
+void CMainDialog::HandleMSG(int32 handle, int32 listindex, string msg)
+{
+	if (handle == 0) // 자신이 보낸 채팅이라는 뜻
+	{
+		CString logEntry = _T("나: ") + CString(msg.c_str());
+
+		m_chatLogs[listindex].push_back(logEntry);
+		m_listChatLog.AddString(logEntry);
+		
+	}
+	else // 상대방의 채팅이라는 뜻
+	{		
+		CString strFriend;
+		m_listFriends.GetText(listindex, strFriend);
+		CString logEntry = strFriend + _T(": ") + CString(msg.c_str());
+
+		m_chatLogs[listindex].push_back(logEntry);
+		if(m_listFriends.GetCurSel() == listindex)
+			m_listChatLog.AddString(logEntry);
+	}
 }
 

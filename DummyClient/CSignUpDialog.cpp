@@ -30,6 +30,8 @@ BOOL CSignUpDialog::OnInitDialog()
 {
 	CDialog::OnInitDialog();
 
+	user->SetCurDialog(this);
+
 	m_bgBrush.CreateSolidBrush(COLOR_BACKGROUND);
 	
 	m_ctrlError.SubclassDlgItem(IDC_STATIC_SIGNUP_ERROR, this);
@@ -102,8 +104,8 @@ void CSignUpDialog::OnBnClickedSignUp()
 		sendpkt.set_email(email);
 
 		SendBufferRef snedBuffer = ServerPacketHandler::MakeUnReliableBuffer(sendpkt);
-		user.BlockSend(snedBuffer);
-		user.BlockRecv();
+		user->BlockSend(snedBuffer);
+		user->BlockRecv();
 
 		int32 code = GetSignUpCode();
 		CLoginDialog dlg;

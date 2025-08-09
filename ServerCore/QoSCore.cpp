@@ -145,11 +145,9 @@ void QoSShard::DoWork()
 
 
 QoSShard::QoSShard()
-	: running(true)
 {
-	GThreadManager->Launch([this]() {
-		DoWork();
-		});
+	
+	
 }
 
 QoSShard::~QoSShard()
@@ -158,7 +156,13 @@ QoSShard::~QoSShard()
 }
 
 
-
+void QoSShard::Run()
+{
+	running = true;
+	GThreadManager->Launch([this]() {
+		DoWork();
+		});
+}
 void TokenBucket::Refil()
 {
 	TimePoint now = chrono::steady_clock::now();

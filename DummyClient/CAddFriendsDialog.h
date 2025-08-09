@@ -34,6 +34,7 @@ public:
 	afx_msg void OnBnClickedAdd();
 	afx_msg void OnCancel();
 
+	void ResponseAddFriend(int32 code);
 	CDialog* ownerDialog;
 };
 

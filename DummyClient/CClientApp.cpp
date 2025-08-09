@@ -1,9 +1,37 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "CClientApp.h"
 #include "CMainDialog.h"
 
 CClientApp ExLoginApp;
-
+UINT ReplyRecved(LPVOID pParam)
+{
+	int32 start = 0;
+	int32 count = 0;
+	bool bhascount;
+	while (true)
+	{
+		//this_thread::sleep_for(100ms);
+		if (user != nullptr && user->playerId != 0)
+		{
+			//this_thread::sleep_for(100ms);
+			if (user->GetDeliveryManager()->WritePendingAcks(start, count, bhascount)) // ï¿½ï¿½ï¿½ï¿½ Ackï¿½ï¿½ ï¿½×¿ï¿½ï¿½ï¿½
+			{
+				Protocol::C_RUDPACK pkt;
+				pkt.set_bhascount(bhascount);
+				pkt.set_count(count);
+				pkt.set_start(start);
+				pkt.set_playerid(user->playerId);
+				SendBufferRef sendBufferR = ServerPacketHandler::MakeUnReliableBuffer(pkt);
+				user->Send(sendBufferR);
+				//cout << "Send RUDP ACK" << endl;
+			}
+		}
+		user->GetDeliveryManager()->ProcessTimeOutPackets();
+		//PacketLost();
+		//PacketDeliverCondition(player);
+		std::this_thread::sleep_for(std::chrono::milliseconds(100));
+	}
+}
 UINT WorkThread(LPVOID pParam)
 {
 	GUDP.GetUDPSocket(0)->UDPWork();
@@ -14,52 +42,7 @@ UINT DoJobThread(LPVOID pParam)
 	GUDP.UDPDoJop();
 	return 0;
 }
-UINT DoRUDPLoopThread(LPVOID pParam)
-{
-	int32 ackpreStart = 0;
-	int32 ackStart = 1;
-	int32 ackCount = 0;
-	bool hasCount = false;
-	NetAddress netAddr;
-	while (true)
-	{
-		if (GPlayerManager.GetPlayers().empty())
-			continue;
-		for (auto p : GPlayerManager.GetPlayers())
-		{
-			//auto player = p.second;
-			memset(&netAddr, 0, sizeof(netAddr));
-			//this_thread::sleep_for(300ms);
-			while (true) //AckRange ºñ¿ï¶§±îÁö
-			{
 
-				if (p.second->GetDeliveryManager()->WritePendingAcks(ackStart, ackCount, hasCount)) // º¸³¾ AckÀÌ ½×¿´´Ù
-				{
-					/*if (ackpreStart == ackStart && ackpreStart > 1)
-					{
-						cout << "ackpreStart : " << ackpreStart << endl;
-						CRASH("ackpreStart == ackStart");
-					}*/
-					Protocol::S_RUDPACK pkt;
-					pkt.set_bhascount(hasCount);
-					pkt.set_count(ackCount);
-					pkt.set_start(ackStart);
-					pkt.set_playerid(p.second->playerId);
-					SendBufferRef sendBuffer = ServerPacketHandler::MakeUnReliableBuffer(pkt);
-					p.second->Send(sendBuffer);
-					//GUDP.GetUDPSocket(0)->Send(netAddr, sendBuffer);
-					ackpreStart = ackStart;
-					//cout << "Send RUDP ACK player->playerId : " << p.second->playerId << endl;
-				}
-				else
-					break;
-			}
-			p.second->GetDeliveryManager()->ProcessTimeOutPackets();
-			//PacketDeliverCondition();
-		}
-	}
-	return 0;
-}
 BOOL CClientApp::InitInstance()
 {
 	ServerPacketHandler::Init();
@@ -69,12 +52,12 @@ BOOL CClientApp::InitInstance()
 		//AfxMessageBox(_T("UDP Init Succeed"));
 		GUDP.SetIsOn(true);
 
-		user.ownerSocket = GUDP.GetUDPSocket(0)->shared_from_this();
-		user.netAddress = user.ownerSocket->GetNetAddress();
+		user->ownerSocket = GUDP.GetUDPSocket(0)->shared_from_this();
+		user->netAddress = user->ownerSocket->GetNetAddress();
 
 		AfxBeginThread(WorkThread, this);
 		AfxBeginThread(DoJobThread, this);
-		AfxBeginThread(DoRUDPLoopThread, this);
+		AfxBeginThread(ReplyRecved, this);
 	}
 	
 	CLoginDialog dig;

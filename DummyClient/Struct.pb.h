@@ -47,7 +47,7 @@ struct TableStruct_Struct_2eproto {
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
   static const ::PROTOBUF_NAMESPACE_ID::internal::AuxiliaryParseTableField aux[]
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
-  static const ::PROTOBUF_NAMESPACE_ID::internal::ParseTable schema[8]
+  static const ::PROTOBUF_NAMESPACE_ID::internal::ParseTable schema[9]
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
   static const ::PROTOBUF_NAMESPACE_ID::internal::FieldMetadata field_metadata[];
   static const ::PROTOBUF_NAMESPACE_ID::internal::SerializationTable serialization_table[];
@@ -55,6 +55,9 @@ struct TableStruct_Struct_2eproto {
 };
 extern const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable descriptor_table_Struct_2eproto;
 namespace Protocol {
+class ChatLog;
+struct ChatLogDefaultTypeInternal;
+extern ChatLogDefaultTypeInternal _ChatLog_default_instance_;
 class Friend;
 struct FriendDefaultTypeInternal;
 extern FriendDefaultTypeInternal _Friend_default_instance_;
@@ -81,6 +84,7 @@ struct VelocityDefaultTypeInternal;
 extern VelocityDefaultTypeInternal _Velocity_default_instance_;
 }  // namespace Protocol
 PROTOBUF_NAMESPACE_OPEN
+template<> ::Protocol::ChatLog* Arena::CreateMaybeMessage<::Protocol::ChatLog>(Arena*);
 template<> ::Protocol::Friend* Arena::CreateMaybeMessage<::Protocol::Friend>(Arena*);
 template<> ::Protocol::MoveList* Arena::CreateMaybeMessage<::Protocol::MoveList>(Arena*);
 template<> ::Protocol::MoveTeam* Arena::CreateMaybeMessage<::Protocol::MoveTeam>(Arena*);
@@ -204,6 +208,7 @@ class Friend final :
   enum : int {
     kNicknameFieldNumber = 1,
     kBonlineFieldNumber = 2,
+    kPrimdidFieldNumber = 3,
   };
   // string nickname = 1;
   void clear_nickname();
@@ -228,6 +233,15 @@ class Friend final :
   void _internal_set_bonline(::PROTOBUF_NAMESPACE_ID::int32 value);
   public:
 
+  // int32 primdid = 3;
+  void clear_primdid();
+  ::PROTOBUF_NAMESPACE_ID::int32 primdid() const;
+  void set_primdid(::PROTOBUF_NAMESPACE_ID::int32 value);
+  private:
+  ::PROTOBUF_NAMESPACE_ID::int32 _internal_primdid() const;
+  void _internal_set_primdid(::PROTOBUF_NAMESPACE_ID::int32 value);
+  public:
+
   // @@protoc_insertion_point(class_scope:Protocol.Friend)
  private:
   class _Internal;
@@ -237,6 +251,155 @@ class Friend final :
   typedef void DestructorSkippable_;
   ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr nickname_;
   ::PROTOBUF_NAMESPACE_ID::int32 bonline_;
+  ::PROTOBUF_NAMESPACE_ID::int32 primdid_;
+  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  friend struct ::TableStruct_Struct_2eproto;
+};
+// -------------------------------------------------------------------
+
+class ChatLog final :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:Protocol.ChatLog) */ {
+ public:
+  inline ChatLog() : ChatLog(nullptr) {}
+  ~ChatLog() override;
+  explicit constexpr ChatLog(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized);
+
+  ChatLog(const ChatLog& from);
+  ChatLog(ChatLog&& from) noexcept
+    : ChatLog() {
+    *this = ::std::move(from);
+  }
+
+  inline ChatLog& operator=(const ChatLog& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline ChatLog& operator=(ChatLog&& from) noexcept {
+    if (this == &from) return *this;
+    if (GetOwningArena() == from.GetOwningArena()) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const ChatLog& default_instance() {
+    return *internal_default_instance();
+  }
+  static inline const ChatLog* internal_default_instance() {
+    return reinterpret_cast<const ChatLog*>(
+               &_ChatLog_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    1;
+
+  friend void swap(ChatLog& a, ChatLog& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(ChatLog* other) {
+    if (other == this) return;
+    if (GetOwningArena() == other->GetOwningArena()) {
+      InternalSwap(other);
+    } else {
+      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(ChatLog* other) {
+    if (other == this) return;
+    GOOGLE_DCHECK(GetOwningArena() == other->GetOwningArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline ChatLog* New() const final {
+    return new ChatLog();
+  }
+
+  ChatLog* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
+    return CreateMaybeMessage<ChatLog>(arena);
+  }
+  void CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void CopyFrom(const ChatLog& from);
+  void MergeFrom(const ChatLog& from);
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  ::PROTOBUF_NAMESPACE_ID::uint8* _InternalSerialize(
+      ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(ChatLog* other);
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "Protocol.ChatLog";
+  }
+  protected:
+  explicit ChatLog(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  private:
+  static void ArenaDtor(void* object);
+  inline void RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  public:
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kMsgFieldNumber = 1,
+    kPrimidFieldNumber = 2,
+  };
+  // string msg = 1;
+  void clear_msg();
+  const std::string& msg() const;
+  template <typename ArgT0 = const std::string&, typename... ArgT>
+  void set_msg(ArgT0&& arg0, ArgT... args);
+  std::string* mutable_msg();
+  PROTOBUF_FUTURE_MUST_USE_RESULT std::string* release_msg();
+  void set_allocated_msg(std::string* msg);
+  private:
+  const std::string& _internal_msg() const;
+  inline PROTOBUF_ALWAYS_INLINE void _internal_set_msg(const std::string& value);
+  std::string* _internal_mutable_msg();
+  public:
+
+  // int32 primid = 2;
+  void clear_primid();
+  ::PROTOBUF_NAMESPACE_ID::int32 primid() const;
+  void set_primid(::PROTOBUF_NAMESPACE_ID::int32 value);
+  private:
+  ::PROTOBUF_NAMESPACE_ID::int32 _internal_primid() const;
+  void _internal_set_primid(::PROTOBUF_NAMESPACE_ID::int32 value);
+  public:
+
+  // @@protoc_insertion_point(class_scope:Protocol.ChatLog)
+ private:
+  class _Internal;
+
+  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
+  typedef void InternalArenaConstructable_;
+  typedef void DestructorSkippable_;
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr msg_;
+  ::PROTOBUF_NAMESPACE_ID::int32 primid_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_Struct_2eproto;
 };
@@ -286,7 +449,7 @@ class Player final :
                &_Player_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    1;
+    2;
 
   friend void swap(Player& a, Player& b) {
     a.Swap(&b);
@@ -467,7 +630,7 @@ class Position final :
                &_Position_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    2;
+    3;
 
   friend void swap(Position& a, Position& b) {
     a.Swap(&b);
@@ -621,7 +784,7 @@ class Rotation final :
                &_Rotation_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    3;
+    4;
 
   friend void swap(Rotation& a, Rotation& b) {
     a.Swap(&b);
@@ -775,7 +938,7 @@ class Velocity final :
                &_Velocity_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    4;
+    5;
 
   friend void swap(Velocity& a, Velocity& b) {
     a.Swap(&b);
@@ -929,7 +1092,7 @@ class MoveList final :
                &_MoveList_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    5;
+    6;
 
   friend void swap(MoveList& a, MoveList& b) {
     a.Swap(&b);
@@ -1094,7 +1257,7 @@ class MoveTeam final :
                &_MoveTeam_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    6;
+    7;
 
   friend void swap(MoveTeam& a, MoveTeam& b) {
     a.Swap(&b);
@@ -1259,7 +1422,7 @@ class PlayerMove final :
                &_PlayerMove_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    7;
+    8;
 
   friend void swap(PlayerMove& a, PlayerMove& b) {
     a.Swap(&b);
@@ -1490,6 +1653,95 @@ inline void Friend::_internal_set_bonline(::PROTOBUF_NAMESPACE_ID::int32 value) 
 inline void Friend::set_bonline(::PROTOBUF_NAMESPACE_ID::int32 value) {
   _internal_set_bonline(value);
   // @@protoc_insertion_point(field_set:Protocol.Friend.bonline)
+}
+
+// int32 primdid = 3;
+inline void Friend::clear_primdid() {
+  primdid_ = 0;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 Friend::_internal_primdid() const {
+  return primdid_;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 Friend::primdid() const {
+  // @@protoc_insertion_point(field_get:Protocol.Friend.primdid)
+  return _internal_primdid();
+}
+inline void Friend::_internal_set_primdid(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  
+  primdid_ = value;
+}
+inline void Friend::set_primdid(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  _internal_set_primdid(value);
+  // @@protoc_insertion_point(field_set:Protocol.Friend.primdid)
+}
+
+// -------------------------------------------------------------------
+
+// ChatLog
+
+// string msg = 1;
+inline void ChatLog::clear_msg() {
+  msg_.ClearToEmpty();
+}
+inline const std::string& ChatLog::msg() const {
+  // @@protoc_insertion_point(field_get:Protocol.ChatLog.msg)
+  return _internal_msg();
+}
+template <typename ArgT0, typename... ArgT>
+inline PROTOBUF_ALWAYS_INLINE
+void ChatLog::set_msg(ArgT0&& arg0, ArgT... args) {
+ 
+ msg_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, static_cast<ArgT0 &&>(arg0), args..., GetArenaForAllocation());
+  // @@protoc_insertion_point(field_set:Protocol.ChatLog.msg)
+}
+inline std::string* ChatLog::mutable_msg() {
+  // @@protoc_insertion_point(field_mutable:Protocol.ChatLog.msg)
+  return _internal_mutable_msg();
+}
+inline const std::string& ChatLog::_internal_msg() const {
+  return msg_.Get();
+}
+inline void ChatLog::_internal_set_msg(const std::string& value) {
+  
+  msg_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, value, GetArenaForAllocation());
+}
+inline std::string* ChatLog::_internal_mutable_msg() {
+  
+  return msg_.Mutable(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, GetArenaForAllocation());
+}
+inline std::string* ChatLog::release_msg() {
+  // @@protoc_insertion_point(field_release:Protocol.ChatLog.msg)
+  return msg_.Release(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArenaForAllocation());
+}
+inline void ChatLog::set_allocated_msg(std::string* msg) {
+  if (msg != nullptr) {
+    
+  } else {
+    
+  }
+  msg_.SetAllocated(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), msg,
+      GetArenaForAllocation());
+  // @@protoc_insertion_point(field_set_allocated:Protocol.ChatLog.msg)
+}
+
+// int32 primid = 2;
+inline void ChatLog::clear_primid() {
+  primid_ = 0;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 ChatLog::_internal_primid() const {
+  return primid_;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 ChatLog::primid() const {
+  // @@protoc_insertion_point(field_get:Protocol.ChatLog.primid)
+  return _internal_primid();
+}
+inline void ChatLog::_internal_set_primid(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  
+  primid_ = value;
+}
+inline void ChatLog::set_primid(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  _internal_set_primid(value);
+  // @@protoc_insertion_point(field_set:Protocol.ChatLog.primid)
 }
 
 // -------------------------------------------------------------------
@@ -2277,6 +2529,8 @@ inline void PlayerMove::set_allocated_vel(::Protocol::Velocity* vel) {
 #ifdef __GNUC__
   #pragma GCC diagnostic pop
 #endif  // __GNUC__
+// -------------------------------------------------------------------
+
 // -------------------------------------------------------------------
 
 // -------------------------------------------------------------------

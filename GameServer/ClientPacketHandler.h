@@ -21,6 +21,18 @@ enum : uint16
 	PKT_S_RUDPACK = 1007,
 	PKT_C_FINDACCOUNT = 1008,
 	PKT_S_FINDACCOUNT = 1009,
+	PKT_C_REQUESTFRIEND = 1010,
+	PKT_S_REQUESTFRIEND = 1011,
+	PKT_C_GETFRIENDREQUEST = 1012,
+	PKT_S_GETFRIENDREQUEST = 1013,
+	PKT_C_REQUESTRESPONSE = 1014,
+	PKT_S_REQUESTRESPONSE = 1015,
+	PKT_C_GETFRIENDS = 1016,
+	PKT_S_GETFRIENDS = 1017,
+	PKT_C_SENDMSG = 1018,
+	PKT_S_SENDMSG = 1019,
+	PKT_C_GETCHATLOG = 1020,
+	PKT_S_GETCHATLOG = 1021,
 };
 
 // Custom Handlers
@@ -30,6 +42,12 @@ bool Handle_C_LOGIN(UDPSocketPtr udpSocket, NetAddress clientAddr, PacketHeader*
 bool Handle_C_MAKEACCOUNT(UDPSocketPtr udpSocket, NetAddress clientAddr, PacketHeader* header,  Protocol::C_MAKEACCOUNT& pkt);
 bool Handle_C_RUDPACK(UDPSocketPtr udpSocket, NetAddress clientAddr, PacketHeader* header,  Protocol::C_RUDPACK& pkt);
 bool Handle_C_FINDACCOUNT(UDPSocketPtr udpSocket, NetAddress clientAddr, PacketHeader* header,  Protocol::C_FINDACCOUNT& pkt);
+bool Handle_C_REQUESTFRIEND(UDPSocketPtr udpSocket, NetAddress clientAddr, PacketHeader* header,  Protocol::C_REQUESTFRIEND& pkt);
+bool Handle_C_GETFRIENDREQUEST(UDPSocketPtr udpSocket, NetAddress clientAddr, PacketHeader* header,  Protocol::C_GETFRIENDREQUEST& pkt);
+bool Handle_C_REQUESTRESPONSE(UDPSocketPtr udpSocket, NetAddress clientAddr, PacketHeader* header,  Protocol::C_REQUESTRESPONSE& pkt);
+bool Handle_C_GETFRIENDS(UDPSocketPtr udpSocket, NetAddress clientAddr, PacketHeader* header,  Protocol::C_GETFRIENDS& pkt);
+bool Handle_C_SENDMSG(UDPSocketPtr udpSocket, NetAddress clientAddr, PacketHeader* header,  Protocol::C_SENDMSG& pkt);
+bool Handle_C_GETCHATLOG(UDPSocketPtr udpSocket, NetAddress clientAddr, PacketHeader* header,  Protocol::C_GETCHATLOG& pkt);
 
 class ClientPacketHandler
 {
@@ -43,6 +61,12 @@ public:
 		GPacketHandler[PKT_C_MAKEACCOUNT] = [](UDPSocketPtr udpSocket, NetAddress clientAddr, BYTE* buffer, int32 len) { return HandlePacket<Protocol::C_MAKEACCOUNT>(Handle_C_MAKEACCOUNT, udpSocket, clientAddr, buffer, len); };
 		GPacketHandler[PKT_C_RUDPACK] = [](UDPSocketPtr udpSocket, NetAddress clientAddr, BYTE* buffer, int32 len) { return HandlePacket<Protocol::C_RUDPACK>(Handle_C_RUDPACK, udpSocket, clientAddr, buffer, len); };
 		GPacketHandler[PKT_C_FINDACCOUNT] = [](UDPSocketPtr udpSocket, NetAddress clientAddr, BYTE* buffer, int32 len) { return HandlePacket<Protocol::C_FINDACCOUNT>(Handle_C_FINDACCOUNT, udpSocket, clientAddr, buffer, len); };
+		GPacketHandler[PKT_C_REQUESTFRIEND] = [](UDPSocketPtr udpSocket, NetAddress clientAddr, BYTE* buffer, int32 len) { return HandlePacket<Protocol::C_REQUESTFRIEND>(Handle_C_REQUESTFRIEND, udpSocket, clientAddr, buffer, len); };
+		GPacketHandler[PKT_C_GETFRIENDREQUEST] = [](UDPSocketPtr udpSocket, NetAddress clientAddr, BYTE* buffer, int32 len) { return HandlePacket<Protocol::C_GETFRIENDREQUEST>(Handle_C_GETFRIENDREQUEST, udpSocket, clientAddr, buffer, len); };
+		GPacketHandler[PKT_C_REQUESTRESPONSE] = [](UDPSocketPtr udpSocket, NetAddress clientAddr, BYTE* buffer, int32 len) { return HandlePacket<Protocol::C_REQUESTRESPONSE>(Handle_C_REQUESTRESPONSE, udpSocket, clientAddr, buffer, len); };
+		GPacketHandler[PKT_C_GETFRIENDS] = [](UDPSocketPtr udpSocket, NetAddress clientAddr, BYTE* buffer, int32 len) { return HandlePacket<Protocol::C_GETFRIENDS>(Handle_C_GETFRIENDS, udpSocket, clientAddr, buffer, len); };
+		GPacketHandler[PKT_C_SENDMSG] = [](UDPSocketPtr udpSocket, NetAddress clientAddr, BYTE* buffer, int32 len) { return HandlePacket<Protocol::C_SENDMSG>(Handle_C_SENDMSG, udpSocket, clientAddr, buffer, len); };
+		GPacketHandler[PKT_C_GETCHATLOG] = [](UDPSocketPtr udpSocket, NetAddress clientAddr, BYTE* buffer, int32 len) { return HandlePacket<Protocol::C_GETCHATLOG>(Handle_C_GETCHATLOG, udpSocket, clientAddr, buffer, len); };
 	}
 
 	static bool HandlePacket(UDPSocketPtr udpSocket, NetAddress clientAddr, BYTE * buffer, int32 len)
@@ -57,6 +81,12 @@ private:
 	static SendBufferRef MakeSendBuffer(Protocol::S_MAKEACCOUNT& pkt,const bool& breliable= true, const uint16& class_traffic = 0) { return MakeSendBuffer(pkt, PKT_S_MAKEACCOUNT, breliable, class_traffic); }
 	static SendBufferRef MakeSendBuffer(Protocol::S_RUDPACK& pkt,const bool& breliable= true, const uint16& class_traffic = 0) { return MakeSendBuffer(pkt, PKT_S_RUDPACK, breliable, class_traffic); }
 	static SendBufferRef MakeSendBuffer(Protocol::S_FINDACCOUNT& pkt,const bool& breliable= true, const uint16& class_traffic = 0) { return MakeSendBuffer(pkt, PKT_S_FINDACCOUNT, breliable, class_traffic); }
+	static SendBufferRef MakeSendBuffer(Protocol::S_REQUESTFRIEND& pkt,const bool& breliable= true, const uint16& class_traffic = 0) { return MakeSendBuffer(pkt, PKT_S_REQUESTFRIEND, breliable, class_traffic); }
+	static SendBufferRef MakeSendBuffer(Protocol::S_GETFRIENDREQUEST& pkt,const bool& breliable= true, const uint16& class_traffic = 0) { return MakeSendBuffer(pkt, PKT_S_GETFRIENDREQUEST, breliable, class_traffic); }
+	static SendBufferRef MakeSendBuffer(Protocol::S_REQUESTRESPONSE& pkt,const bool& breliable= true, const uint16& class_traffic = 0) { return MakeSendBuffer(pkt, PKT_S_REQUESTRESPONSE, breliable, class_traffic); }
+	static SendBufferRef MakeSendBuffer(Protocol::S_GETFRIENDS& pkt,const bool& breliable= true, const uint16& class_traffic = 0) { return MakeSendBuffer(pkt, PKT_S_GETFRIENDS, breliable, class_traffic); }
+	static SendBufferRef MakeSendBuffer(Protocol::S_SENDMSG& pkt,const bool& breliable= true, const uint16& class_traffic = 0) { return MakeSendBuffer(pkt, PKT_S_SENDMSG, breliable, class_traffic); }
+	static SendBufferRef MakeSendBuffer(Protocol::S_GETCHATLOG& pkt,const bool& breliable= true, const uint16& class_traffic = 0) { return MakeSendBuffer(pkt, PKT_S_GETCHATLOG, breliable, class_traffic); }
 	
 
 	template<typename PacketType, typename ProcessFunc>

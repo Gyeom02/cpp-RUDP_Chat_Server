@@ -1,6 +1,11 @@
 #pragma once
 #include "resource.h"
-
+struct Friend
+{
+	Friend(int32 primid, string nickname) : _primid(primid), _nickname(nickname) {}
+	int32 _primid;
+	string _nickname;
+};
 class CMainDialog : public CDialog
 {
 public:
@@ -24,6 +29,13 @@ protected:
 	DECLARE_MESSAGE_MAP()
 
 public:
+	void ReFreshFriendList();
+	void AddFriends(vector<Friend>& friends);
+	void AddFriend(Friend _friend);
+	void SendGetFriends();
+	int32 FindFriendIndex(int32 primid); // Using for to get listindex who gave me chat
+	void HandleMSG(int32 handle, int32 listindex, string msg);
+public:
 	CListBox m_listFriends;
 	CListBox m_listChatLog;
 	CEdit m_editChatInput;
@@ -36,11 +48,12 @@ public:
 	
 
 	CString m_currentTarget;
-	std::map<CString, std::vector<CString>> m_chatLogs;
+	std::map<int32, std::vector<CString>> m_chatLogs;
 
 	bool bStartedChat = false;
 
 private:
-	
+	USE_LOCK;
+	vector<Friend> _friends;
 };
 

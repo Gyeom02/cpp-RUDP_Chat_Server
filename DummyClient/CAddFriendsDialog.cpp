@@ -26,6 +26,8 @@ BOOL CAddFriendsDialog::OnInitDialog()
 {
 	CDialog::OnInitDialog();
 
+	user->SetCurDialog(this);
+
 	m_ctrlError.SubclassDlgItem(IDC_ADDFRIENDS_ERROR, this);
 	m_ctrlError.SetWindowTextW(_T(""));
 
@@ -91,7 +93,11 @@ void CAddFriendsDialog::SetError(int32 i)
 	{
 		m_errorColor = COLOR_BUTTON;
 	}
-	else // SetRed
+	if (i == 2)
+	{
+		m_errorColor = RGB(0, 0, 255);
+	}
+	else  // SetRed
 	{
 		m_errorColor = RGB(255, 0, 0);
 	}
@@ -112,12 +118,21 @@ void CAddFriendsDialog::OnBnClickedAdd()
 		m_ctrlError.SetWindowTextW(_T("친구코드를 입력하세요"));
 		return;
 	}
-
+	
 	//TODO Check Server if this Friends Code Exist or Not
-	SetError(0);
-	m_ctrlError.SetWindowTextW(_T("성공적으로 보냈습니다"));
+	
+	SetError(2);
+	m_ctrlError.SetWindowTextW(_T("보내는 중"));
 	m_strFriendsText.SetWindowTextW(_T(""));
 
+	Protocol::C_REQUESTFRIEND sendpkt;
+	std::string id = to_string(user->playerId);
+	sendpkt.set_primid(id);
+	sendpkt.set_friendcode(CT2CA(strmessage));
+
+	SendBufferRef sendBuffer = ServerPacketHandler::MakeReliableBuffer(sendpkt, QoSCore::HIGH);
+
+	user->Send(sendBuffer);
 }
 
 
@@ -127,4 +142,20 @@ void CAddFriendsDialog::OnCancel()
 	if (mainDlg)
 		AfxGetApp()->m_pMainWnd = mainDlg;
 	CDialog::OnCancel();
+}
+
+void CAddFriendsDialog::ResponseAddFriend(int32 code)
+{
+	if (code == 0)
+	{
+		SetError(1);
+		m_ctrlError.SetWindowTextW(_T("친구코드가 정확하지 않습니다"));
+		return;
+	}
+	else if (code == 1)
+	{
+		SetError(0);
+		m_ctrlError.SetWindowTextW(_T("성공적으로 보냈습니다"));
+		return;
+	}
 }

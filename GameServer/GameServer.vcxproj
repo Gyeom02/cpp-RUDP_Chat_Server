@@ -221,6 +221,7 @@ CALL $(SolutionDir)Common\Procedures\GenProcs.bat</Command>
     <ClInclude Include="GameSession.h" />
     <ClInclude Include="GameSessionManager.h" />
     <ClInclude Include="GenProcedures.h" />
+    <ClInclude Include="MakeFriendCode.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="PlayerManager.h" />

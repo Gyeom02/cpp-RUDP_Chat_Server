@@ -115,6 +115,8 @@ int main()
 
 	ClientPacketHandler::Init(); 
 
+	for (int i = 0; i < QOS_SHARD_COUNT; i++)
+		GQoS->GetShard(i)->Run();
 	//ServerServiceRef service = MakeShared<ServerService>(
 	//	NetAddress(L"127.0.0.1", 7777),
 	//	MakeShared<IocpCore>(),
@@ -165,39 +167,43 @@ int main()
 	NetAddress netAddr;
 	while (true)
 	{
-		if (GPlayerManager.GetPlayers().empty())
-			continue;
-		for (auto p : GPlayerManager.GetPlayers())
+		for (int32 i = 0; i < PlayerManager::PLAYER_SHARD_COUNT; i++)
 		{
-			//auto player = p.second;
-			memset(&netAddr, 0, sizeof(netAddr));
-			//this_thread::sleep_for(300ms);
-			while (true) //AckRange 비울때까지
+			PlayerShard* shard = GPlayerManager.GetShard(i);
+			if (shard->GetPlayers().empty())
+				continue;
+			for (auto p : shard->GetPlayers())
 			{
-
-				if (p.second->GetDeliveyManager()->WritePendingAcks(ackStart, ackCount, hasCount)) // 보낼 Ack이 쌓였다
+				//auto player = p.second;
+				memset(&netAddr, 0, sizeof(netAddr));
+				//this_thread::sleep_for(300ms);
+				while (true) //AckRange 비울때까지
 				{
-					/*if (ackpreStart == ackStart && ackpreStart > 1)
+
+					if (p.second->GetDeliveyManager()->WritePendingAcks(ackStart, ackCount, hasCount)) // 보낼 Ack이 쌓였다
 					{
-						cout << "ackpreStart : " << ackpreStart << endl;
-						CRASH("ackpreStart == ackStart");
-					}*/
-					Protocol::S_RUDPACK pkt;
-					pkt.set_bhascount(hasCount);
-					pkt.set_count(ackCount);
-					pkt.set_start(ackStart);
-					pkt.set_playerid(p.second->playerId);
-					SendBufferRef sendBuffer = ClientPacketHandler::MakeUnReliableBuffer(pkt);
-					p.second->Send(sendBuffer);
-					//GUDP.GetUDPSocket(0)->Send(netAddr, sendBuffer);
-					ackpreStart = ackStart;
-					//cout << "Send RUDP ACK player->playerId : " << p.second->playerId << endl;
+						/*if (ackpreStart == ackStart && ackpreStart > 1)
+						{
+							cout << "ackpreStart : " << ackpreStart << endl;
+							CRASH("ackpreStart == ackStart");
+						}*/
+						Protocol::S_RUDPACK pkt;
+						pkt.set_bhascount(hasCount);
+						pkt.set_count(ackCount);
+						pkt.set_start(ackStart);
+						pkt.set_playerid(p.second->playerId);
+						SendBufferRef sendBuffer = ClientPacketHandler::MakeUnReliableBuffer(pkt);
+						p.second->Send(sendBuffer);
+						//GUDP.GetUDPSocket(0)->Send(netAddr, sendBuffer);
+						ackpreStart = ackStart;
+						//cout << "Send RUDP ACK player->playerId : " << p.second->playerId << endl;
+					}
+					else
+						break;
 				}
-				else
-					break;
+				p.second->GetDeliveyManager()->ProcessTimeOutPackets();
+				//PacketDeliverCondition();
 			}
-			p.second->GetDeliveyManager()->ProcessTimeOutPackets();
-			//PacketDeliverCondition();
 		}
 	}
 	GThreadManager->Join();

@@ -2,7 +2,7 @@
 #include "UDP.h"
 
 
-#define SERVERADDR L"192.168.219.101"
+#define SERVERADDR L"192.168.219.102"
 
 UDP GUDP;
 bool UDP::UDPSocketReset(int32 index)

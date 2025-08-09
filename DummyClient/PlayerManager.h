@@ -1,4 +1,5 @@
 #pragma once
+
 class Player;
 
 class PlayerManager
@@ -14,9 +15,6 @@ public:
 	int32 ReuseID();
 	void PushID(int32 id);
 
-	//atomic<int32> _sendPacketNum;
-	//atomic<int32> _recvPacketNum;
-
 private:
 	USE_LOCK;
 	Map<int32, PlayerRef> _players;
@@ -24,3 +22,4 @@ private:
 };
 
 extern PlayerManager GPlayerManager;
+

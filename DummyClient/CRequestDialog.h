@@ -1,6 +1,13 @@
 #pragma once
 #include "resource.h"
 
+struct Request
+{
+	Request(int32 id, string nickname) : _id(id), _nickname(nickname) {}
+	int32 _id;
+	string _nickname;
+};
+
 class CRequestDialog : public CDialog
 {
 	
@@ -37,8 +44,16 @@ public:
 	afx_msg void OnBnClickedAccept();
 	afx_msg void OnBnClickedReject();
 	afx_msg void OnCancel();
-public:
 
+	void FreshRequestsList();
+	void AddRequest(int32 id, string name);
+	void AddRequests(vector<Request>& request);
+	void ApplyRequestPkt(int32 index, int32 bsuccess);
+public:
 	CDialog* ownerDlg = nullptr;
+private:
+	vector<Request> _requests;
+	USE_LOCK;
+	//int32 curRequestindex; // 업데이트 된 최근 vector의 끝 수 
 };
 

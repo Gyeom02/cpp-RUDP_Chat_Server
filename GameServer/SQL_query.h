@@ -18,7 +18,8 @@ namespace SQLQuery
 					  CREATE TABLE [dbo].[User]
 					  (
 						primid INT NOT NULL,
-                        nickname NVARCHAR(50) NOT NULL
+                        nickname NVARCHAR(50) NOT NULL,
+						friendcode NVARCHAR(50) NOT NULL
 					  );
 					   CREATE TABLE [dbo].[Friend]
 					  (
@@ -51,5 +52,26 @@ namespace SQLQuery
 
 	
 
+	/* 이전 개선되기전  RegisterAccount 쿼리
+	DECLARE @IsExist INT;
+	DECLARE @GetPrimId INT;
+	DECLARE @IsEmailExist INT;
 
+    SELECT @IsExist = primid FROM [dbo].[Account] WHERE id = '{0}';
+	SELECT id, email FROM [dbo].[Account]  WHERE id = '{0}';
+		
+    IF @IsExist IS NULL
+    BEGIN
+		SELECT id, email FROM [dbo].[Account] WHERE email = '{3}';
+		SELECT @IsEmailExist = primid FROM [dbo].[Account] WHERE email = '{3}';
+		
+		IF @IsEmailExist IS NULL
+		BEGIN
+			INSERT INTO [dbo].[Account] (id, pw, email) VALUES ('{0}', '{1}', '{3}');
+
+			SET @GetPrimId = SCOPE_IDENTITY();
+
+			INSERT INTO [dbo].[User] (primid, nickname, friendcode) VALUES (@GetPrimId, '{2}', '{4}');
+		END
+    END*/
 }
