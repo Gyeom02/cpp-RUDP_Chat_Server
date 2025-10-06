@@ -34,6 +34,9 @@
     <Filter Include="QoS">
       <UniqueIdentifier>{73cfb9f9-ef84-4c56-80d1-b6d4cbb85ed5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="lz4">
+      <UniqueIdentifier>{8820d77e-5dfe-4777-b87d-3ee46eabd58f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CorePch.h">
@@ -183,6 +186,9 @@
     <ClInclude Include="DBConnectionPool.h">
       <Filter>DB</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\..\Downloads\lz4-dev\lz4-dev\lib\lz4.h">
+      <Filter>lz4</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CorePch.cpp">
@@ -304,6 +310,9 @@
     </ClCompile>
     <ClCompile Include="DBModel.cpp">
       <Filter>DB</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Downloads\lz4-dev\lz4-dev\lib\lz4.c">
+      <Filter>lz4</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

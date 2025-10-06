@@ -86,7 +86,7 @@ void CMainDialog::OnBnClickedSend()
 		sendpkt.set_to_id(to_string(_friends[friendindex]._primid));
 		sendpkt.set_msg(string(CT2CA(strmessage)));
 		sendpkt.set_listindex(friendindex);
-		SendBufferRef sendbuffer = ServerPacketHandler::MakeReliableBuffer(sendpkt, QoSCore::HIGH);
+ 		SendBufferRef sendbuffer = ServerPacketHandler::MakeReliableBuffer(sendpkt, QoSCore::HIGH);
 		user->Send(sendbuffer);
 		
 		m_editChatInput.SetWindowText(_T(""));

@@ -74,9 +74,23 @@ void UDPSocket::UDPWork()
 					}
 				}
 				BYTE* cpybuffer = new BYTE[1000];
-				::memcpy(cpybuffer, &udpRecvBuffer.ReadPos()[processLen], header->size);
-				
-				GUDP.CheckPacketPriority(shared_from_this(), NetAddress(recvAddr), cpybuffer, header->size);
+				int packetSize = 0;
+				if (header->compressed == 1) // 압축된 패킷이다
+				{
+					//LZ4 Decompress
+					::memcpy(cpybuffer, &udpRecvBuffer.ReadPos()[processLen], sizeof(PacketHeader));
+					int decompress_size = LZ4_decompress_safe(reinterpret_cast<const char*>(&header[1]), reinterpret_cast<char*>(cpybuffer + sizeof(PacketHeader)), header->compress_size, header->decompress_size);
+					/////////////////////////////
+					cout << "압축 패킷 사이즈 : " << header->compress_size << " | " << "압축해제 패킷 사이즈 : " << decompress_size << endl;
+					cout << header->decompress_size << endl;
+					packetSize = sizeof(PacketHeader) + decompress_size;
+				}
+				else // 압축된 패킷이 아님
+				{
+					::memcpy(cpybuffer, &udpRecvBuffer.ReadPos()[processLen], header->size);
+					packetSize = header->size;
+				}
+				GUDP.CheckPacketPriority(shared_from_this(), NetAddress(recvAddr), cpybuffer, packetSize);
 				//cout << "SERVER GOT MSG FROM : " << header->playerId << endl;
 				processLen += header->size;
 			}

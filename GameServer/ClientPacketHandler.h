@@ -104,17 +104,37 @@ private:
 	static SendBufferRef MakeSendBuffer(T& pkt, uint16 pktId, const bool& breliable, const uint16& class_traffic) 
 	{
 		const uint16 dataSize = static_cast<uint16>(pkt.ByteSizeLong());
-		const uint16 packetSize = dataSize + sizeof(PacketHeader);
+		uint16 packetSize = dataSize + sizeof(PacketHeader);
 
 		SendBufferRef sendBuffer = GSendBufferManager->Open(packetSize);
 		PacketHeader* header = reinterpret_cast<PacketHeader*>(sendBuffer->Buffer());
+
+		ASSERT_CRASH(pkt.SerializeToArray(&header[1], dataSize));
+		
+		vector<BYTE> input(LZ4_compressBound(dataSize));
+		int compressSize = LZ4_compress_default(reinterpret_cast<const char*>(&header[1]), reinterpret_cast<char*>(input.data()), static_cast<int>(dataSize), input.size());
+		
+		ASSERT_CRASH(compressSize >= 0);
+
+		if (compressSize >= dataSize)
+		{
+			sendBuffer->Close(packetSize);
+			header->compressed = 0;
+		}
+		else
+		{
+			::memcpy(&header[1], input.data(), compressSize);
+			packetSize = compressSize + sizeof(PacketHeader);
+			sendBuffer->Close(packetSize);
+			header->compressed = 1;
+			header->decompress_size = dataSize;
+			header->compress_size = compressSize;
+		}
 		header->size = packetSize;
 		header->id = pktId;
 		header->breliable = breliable;
 		header->priority = class_traffic;
 		header->retransnum = 0;
-		ASSERT_CRASH(pkt.SerializeToArray(&header[1], dataSize));
-		sendBuffer->Close(packetSize);
 
 		return sendBuffer;
 	}

@@ -2,7 +2,7 @@
 #include "UDP.h"
 
 
-#define SERVERADDR L"192.168.219.102"
+#define SERVERADDR L"192.168.219.101"
 
 UDP GUDP;
 bool UDP::UDPSocketReset(int32 index)
@@ -101,13 +101,13 @@ void UDP::CheckPacketPriority(UDPSocketPtr udpSocket, NetAddress clientAddress, 
 	{
 		
 		GUDPJob.Push([=]() {
-			GUDP.UDPPacketHandle(udpSocket, clientAddress, buffer, header->size);
+			GUDP.UDPPacketHandle(udpSocket, clientAddress, buffer, len);
 			}, QoSCore::LOW);
 	}
 	else
 	{
 		GUDPJob.Push([=]() {
-			GUDP.UDPPacketHandle(udpSocket, clientAddress, buffer, header->size);
+			GUDP.UDPPacketHandle(udpSocket, clientAddress, buffer, len);
 			}, QoSCore::HIGH);
 	}
 }

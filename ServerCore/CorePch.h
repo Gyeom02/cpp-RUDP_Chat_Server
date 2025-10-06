@@ -26,4 +26,5 @@ using namespace std;
 #include "ConsoleLog.h"
 #include "DeliveryNotificationManager.h"
 #include "QoSCore.h"
+#include "lz4.h"
 //#include "UDP.h"

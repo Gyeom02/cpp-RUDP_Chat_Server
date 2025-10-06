@@ -2,7 +2,7 @@
 #include "UDP.h"
 
 
-#define SERVERADDR L"192.168.219.102"
+#define SERVERADDR L"192.168.219.101"
 
 UDP GUDP;
 bool UDP::UDPSocketReset(int32 index)
@@ -100,13 +100,13 @@ void UDP::CheckPacketPriority(UDPSocketPtr udpSocket, NetAddress clientAddress, 
 	if (header->priority == QoSCore::FPC)
 	{
 		GUDPJob.Push([=]() {
-			GUDP.UDPPacketHandle(udpSocket, clientAddress, buffer, header->size);
+			GUDP.UDPPacketHandle(udpSocket, clientAddress, buffer, len);
 			}, QoSCore::LOW);
 	}
 	else
 	{
 		GUDPJob.Push([=]() {
-			GUDP.UDPPacketHandle(udpSocket, clientAddress, buffer, header->size);
+			GUDP.UDPPacketHandle(udpSocket, clientAddress, buffer, len);
 			}, QoSCore::HIGH);
 	}
 }
@@ -116,6 +116,9 @@ void UDP::UDPPacketHandle(UDPSocketPtr udpSocket, NetAddress clientAddress, BYTE
 	PacketHeader* header = reinterpret_cast<PacketHeader*>(buffer);
 
 	ServerPacketHandler::HandlePacket(udpSocket, clientAddress, buffer, len);
+
+	delete[] buffer;
+	buffer = nullptr;
 	//if (header->id == 1004) // 1004는 임시 패킷 번호(메세지 전송 패킷)이다
 	//{
 

@@ -105,6 +105,9 @@ struct PacketHeader
 	int32 playerId; 
 	int32 sn; // sequenceNumber (RUDP패킷 추적할때 사용)
 	int32 retransnum = 0;
+	int16 compressed = 0;
+	int decompress_size = 0;
+	int compress_size = 0;
 };
 
 class PacketSession : public Session
