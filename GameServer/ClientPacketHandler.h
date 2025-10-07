@@ -33,6 +33,9 @@ enum : uint16
 	PKT_S_SENDMSG = 1019,
 	PKT_C_GETCHATLOG = 1020,
 	PKT_S_GETCHATLOG = 1021,
+	PKT_C_SHAREPUBLICKEY = 1022,
+	PKT_S_SHAREPUBLICKEY = 1023,
+	PKT_C_KEYREADY = 1024,
 };
 
 // Custom Handlers
@@ -48,6 +51,8 @@ bool Handle_C_REQUESTRESPONSE(UDPSocketPtr udpSocket, NetAddress clientAddr, Pac
 bool Handle_C_GETFRIENDS(UDPSocketPtr udpSocket, NetAddress clientAddr, PacketHeader* header,  Protocol::C_GETFRIENDS& pkt);
 bool Handle_C_SENDMSG(UDPSocketPtr udpSocket, NetAddress clientAddr, PacketHeader* header,  Protocol::C_SENDMSG& pkt);
 bool Handle_C_GETCHATLOG(UDPSocketPtr udpSocket, NetAddress clientAddr, PacketHeader* header,  Protocol::C_GETCHATLOG& pkt);
+bool Handle_C_SHAREPUBLICKEY(UDPSocketPtr udpSocket, NetAddress clientAddr, PacketHeader* header,  Protocol::C_SHAREPUBLICKEY& pkt);
+bool Handle_C_KEYREADY(UDPSocketPtr udpSocket, NetAddress clientAddr, PacketHeader* header,  Protocol::C_KEYREADY& pkt);
 
 class ClientPacketHandler
 {
@@ -67,6 +72,8 @@ public:
 		GPacketHandler[PKT_C_GETFRIENDS] = [](UDPSocketPtr udpSocket, NetAddress clientAddr, BYTE* buffer, int32 len) { return HandlePacket<Protocol::C_GETFRIENDS>(Handle_C_GETFRIENDS, udpSocket, clientAddr, buffer, len); };
 		GPacketHandler[PKT_C_SENDMSG] = [](UDPSocketPtr udpSocket, NetAddress clientAddr, BYTE* buffer, int32 len) { return HandlePacket<Protocol::C_SENDMSG>(Handle_C_SENDMSG, udpSocket, clientAddr, buffer, len); };
 		GPacketHandler[PKT_C_GETCHATLOG] = [](UDPSocketPtr udpSocket, NetAddress clientAddr, BYTE* buffer, int32 len) { return HandlePacket<Protocol::C_GETCHATLOG>(Handle_C_GETCHATLOG, udpSocket, clientAddr, buffer, len); };
+		GPacketHandler[PKT_C_SHAREPUBLICKEY] = [](UDPSocketPtr udpSocket, NetAddress clientAddr, BYTE* buffer, int32 len) { return HandlePacket<Protocol::C_SHAREPUBLICKEY>(Handle_C_SHAREPUBLICKEY, udpSocket, clientAddr, buffer, len); };
+		GPacketHandler[PKT_C_KEYREADY] = [](UDPSocketPtr udpSocket, NetAddress clientAddr, BYTE* buffer, int32 len) { return HandlePacket<Protocol::C_KEYREADY>(Handle_C_KEYREADY, udpSocket, clientAddr, buffer, len); };
 	}
 
 	static bool HandlePacket(UDPSocketPtr udpSocket, NetAddress clientAddr, BYTE * buffer, int32 len)
@@ -87,6 +94,7 @@ private:
 	static SendBufferRef MakeSendBuffer(Protocol::S_GETFRIENDS& pkt,const bool& breliable= true, const uint16& class_traffic = 0) { return MakeSendBuffer(pkt, PKT_S_GETFRIENDS, breliable, class_traffic); }
 	static SendBufferRef MakeSendBuffer(Protocol::S_SENDMSG& pkt,const bool& breliable= true, const uint16& class_traffic = 0) { return MakeSendBuffer(pkt, PKT_S_SENDMSG, breliable, class_traffic); }
 	static SendBufferRef MakeSendBuffer(Protocol::S_GETCHATLOG& pkt,const bool& breliable= true, const uint16& class_traffic = 0) { return MakeSendBuffer(pkt, PKT_S_GETCHATLOG, breliable, class_traffic); }
+	static SendBufferRef MakeSendBuffer(Protocol::S_SHAREPUBLICKEY& pkt,const bool& breliable= true, const uint16& class_traffic = 0) { return MakeSendBuffer(pkt, PKT_S_SHAREPUBLICKEY, breliable, class_traffic); }
 	
 
 	template<typename PacketType, typename ProcessFunc>
@@ -130,6 +138,7 @@ private:
 			header->decompress_size = dataSize;
 			header->compress_size = compressSize;
 		}
+		
 		header->size = packetSize;
 		header->id = pktId;
 		header->breliable = breliable;

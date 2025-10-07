@@ -1,5 +1,8 @@
 #pragma once
 #include "UDP.h"
+#include <openssl/evp.h>
+#include "Encrypt.h"
+
 using PlayerRef = shared_ptr<class Player>;
 
 struct Position
@@ -45,6 +48,8 @@ struct Velocity
 	atomic<float> vz;
 };
 
+class X25519KeyPair;
+
 class Player : public Object
 {
 public:
@@ -88,6 +93,21 @@ private:
 	string	_nickname;
 	string _friendcode;
 	CDialog* _currentDialog;
+
+public:
+	X25519KeyPair& Getx25519() { return x25519_key; }
+
+	void SetAesKey(vector<uint8>& key) { aes_key = key; }
+	std::vector<uint8>& GetAesKey() { return aes_key; }
+
+	bool keyready = false;
+private:
+	//Encrypt
+	X25519KeyPair x25519_key;
+	std::vector<uint8> aes_key = {};
+	std::vector<uint8> iv;
+	std::vector<uint8> tag;
+
 };
 
 extern PlayerRef user;

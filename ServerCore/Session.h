@@ -108,6 +108,10 @@ struct PacketHeader
 	int16 compressed = 0;
 	int decompress_size = 0;
 	int compress_size = 0;
+	int encrypted = 0;
+	array<uint8, 12> iv;
+	array<uint8, 16> tag;
+	//void SetEncrypt(string _iv, string _ct, string _tag) { iv = _iv; ct = _ct; tag = _tag; }
 };
 
 class PacketSession : public Session

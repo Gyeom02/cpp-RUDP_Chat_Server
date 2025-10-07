@@ -173,6 +173,8 @@ bool Handle_S_REQUESTRESPONSE(UDPSocketPtr udpSocket, NetAddress clientAddr, Pac
 
 bool Handle_S_GETFRIENDS(UDPSocketPtr udpSocket, NetAddress clientAddr, PacketHeader* header, Protocol::S_GETFRIENDS& pkt)
 {
+	//AfxMessageBox(_T("Handle_S_GETFRIENDS"));
+	
 	CMainDialog* curDig = dynamic_cast<CMainDialog*>(user->GetCurDialog());
 	if (curDig == nullptr)
 	{
@@ -223,6 +225,38 @@ bool Handle_S_GETCHATLOG(UDPSocketPtr udpSocket, NetAddress clientAddr, PacketHe
 			curDig->HandleMSG(1, pkt.listindex(), chatlog.msg());
 	}
 	return true;
+}
+
+bool Handle_S_SHAREPUBLICKEY(UDPSocketPtr udpSocket, NetAddress clientAddr, PacketHeader* header, Protocol::S_SHAREPUBLICKEY& pkt)
+{
+	vector<uint8> ss;
+	vector<uint8> server_pub;
+	const std::string& data = pkt.publickey(); // bytes 타입은 std::string으로 매핑됨
+	server_pub.resize(data.size());                // vector 크기 맞춤
+	std::copy(data.begin(), data.end(), server_pub.begin()); // std::string -> vector 복사
+
+	//vector<uint8> server_pub(pkt.publickey().begin(), pkt.publickey().end());
+	EVP_PKEY* pkey = user->Getx25519().get();
+	if (!x25519_derive_shared(pkey, server_pub, ss))
+	{
+		cout << " Handle_S_SHAREPUBLICKEY : make shared key failed" << endl;
+		return false;
+	}
+	vector<uint8> aes_key;
+	if (!make_aes256_key(ss, aes_key))
+	{
+		cout << " Handle_S_SHAREPUBLICKEY : make aes256 key failed" << endl;
+		return false;
+	}
+	user->SetAesKey(aes_key);
+
+	Protocol::C_KEYREADY readypkt;
+	readypkt.set_bready(1);
+	readypkt.set_primid(user->playerId);
+	auto sendbuff = ServerPacketHandler::MakeReliableBuffer(readypkt, QoSCore::HIGH);
+	user->Send(sendbuff);
+
+	user->keyready = true;
 }
 
 /*

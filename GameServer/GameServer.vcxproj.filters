@@ -22,6 +22,9 @@
     <Filter Include="Utils\DB">
       <UniqueIdentifier>{78df4586-db01-44a4-916e-ae22da863257}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Encryption">
+      <UniqueIdentifier>{5eb81459-b088-4bbd-9c3c-3c80d4a94ce3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameServer.cpp">
@@ -68,6 +71,9 @@
     </ClCompile>
     <ClCompile Include="DBManager.cpp">
       <Filter>DB</Filter>
+    </ClCompile>
+    <ClCompile Include="Encrypt.cpp">
+      <Filter>Encryption</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -121,6 +127,9 @@
     </ClInclude>
     <ClInclude Include="MakeFriendCode.h">
       <Filter>DB</Filter>
+    </ClInclude>
+    <ClInclude Include="Encrypt.h">
+      <Filter>Encryption</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

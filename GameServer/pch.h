@@ -2,7 +2,7 @@
 
 #define WIN32_LEAN_AND_MEAN // 거의 사용되지 않는 내용을 Windows 헤더에서 제외합니다.
 #define _SERVER
-
+//#define ENCRYPTED_HARD //모든 패킷을 암호화할 것인지 판단
 #ifdef _DEBUG
 #pragma comment(lib, "ServerCore\\Debug\\ServerCore.lib")
 #pragma comment(lib, "Protobuf\\Debug\\libprotobufd.lib")
@@ -16,5 +16,6 @@
 #include "Protocol.pb.h"
 #include "ClientPacketHandler.h"
 #include "Player.h"
+#include "Encrypt.h"
 using GameSessionRef = shared_ptr<class GameSession>;
 //using PlayerRef = shared_ptr<class Player>;

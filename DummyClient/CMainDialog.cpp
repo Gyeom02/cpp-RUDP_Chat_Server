@@ -4,6 +4,8 @@
 #include "CAddFriendsDialog.h"
 #include "PlayerManager.h"
 #include "CRequestDialog.h"
+#include <codecvt>
+#include <locale>
 
 BEGIN_MESSAGE_MAP(CMainDialog, CDialog)
 	ON_WM_CTLCOLOR()
@@ -70,6 +72,19 @@ BOOL CMainDialog::OnInitDialog()
 
 	GetDlgItem(IDC_EDIT_CHATINPUT)->ShowWindow(SW_HIDE);
 	GetDlgItem(IDC_BUTTON_SEND)->ShowWindow(SW_HIDE);
+
+	user->Getx25519().generate();
+
+	Protocol::C_SHAREPUBLICKEY pkt;
+	std::vector<uint8> client_pub(32);
+	x25519_get_public(user->Getx25519().get(), client_pub);
+	pkt.set_primid(user->playerId);
+	
+	pkt.set_publickey(string(client_pub.begin(), client_pub.end()));
+
+	auto SendBuffer = ServerPacketHandler::MakeReliableBuffer(pkt, QoSCore::HIGH);
+	user->Send(SendBuffer);
+
 	return TRUE;
 }
 
@@ -84,7 +99,7 @@ void CMainDialog::OnBnClickedSend()
 		Protocol::C_SENDMSG sendpkt;
 		sendpkt.set_from_id(to_string(user->playerId));
 		sendpkt.set_to_id(to_string(_friends[friendindex]._primid));
-		sendpkt.set_msg(string(CT2CA(strmessage)));
+		sendpkt.set_msg(string(to_utf8(wstring((strmessage)))));
 		sendpkt.set_listindex(friendindex);
  		SendBufferRef sendbuffer = ServerPacketHandler::MakeReliableBuffer(sendpkt, QoSCore::HIGH);
 		user->Send(sendbuffer);
@@ -98,6 +113,20 @@ void CMainDialog::OnBnClickedLogout()
 {
 	if (AfxMessageBox(_T("로그아웃 하시겠습니까?"), MB_YESNO) == IDYES)
 	{
+		if (user)
+		{
+			if (user->playerId > 0)
+			{
+				Protocol::C_DISCONNECT pkt;
+				pkt.set_id(user->playerId);
+				pkt.set_roomid(user->roomId);
+				pkt.set_roomprimid(user->roomprimid);
+				SendBufferRef sendBuffer = ServerPacketHandler::MakeReliableBuffer(pkt, QoSCore::HIGH);
+
+				user->Send(sendBuffer);
+			}
+		}
+
 		CLoginDialog dlg;
 		AfxGetApp()->m_pMainWnd = &dlg;
 		this->ShowWindow(SW_HIDE);
@@ -238,6 +267,27 @@ void CMainDialog::SendGetFriends()
 	user->Send(sendbuffer);
 }
 
+string CMainDialog::to_utf8(const std::wstring& wstr)
+{
+	if (wstr.empty()) return {};
+	int size_needed = WideCharToMultiByte(CP_UTF8, 0, wstr.data(), (int)wstr.size(), nullptr, 0, nullptr, nullptr);
+	std::string strTo(size_needed, 0);
+	WideCharToMultiByte(CP_UTF8, 0, wstr.data(), (int)wstr.size(), strTo.data(), size_needed, nullptr, nullptr);
+	return strTo;
+}
+CString CMainDialog::utf8toCString(const std::string& str)
+{
+	if (str.empty())
+		return CString();
+
+	// 1. UTF-8 → wstring
+	int wlen = MultiByteToWideChar(CP_UTF8, 0, str.data(), (int)str.size(), nullptr, 0);
+	std::wstring wstr(wlen, 0);
+	MultiByteToWideChar(CP_UTF8, 0, str.data(), (int)str.size(), &wstr[0], wlen);
+
+	// 2. wstring → CString
+	return CString(wstr.c_str());
+}
 int32 CMainDialog::FindFriendIndex(int32 primid)
 {
 	for (int32 i = 0 ; i < _friends.size(); i ++)
@@ -255,7 +305,7 @@ void CMainDialog::HandleMSG(int32 handle, int32 listindex, string msg)
 {
 	if (handle == 0) // 자신이 보낸 채팅이라는 뜻
 	{
-		CString logEntry = _T("나: ") + CString(msg.c_str());
+		CString logEntry = _T("나: ") + utf8toCString(msg);
 
 		m_chatLogs[listindex].push_back(logEntry);
 		m_listChatLog.AddString(logEntry);
@@ -265,7 +315,7 @@ void CMainDialog::HandleMSG(int32 handle, int32 listindex, string msg)
 	{		
 		CString strFriend;
 		m_listFriends.GetText(listindex, strFriend);
-		CString logEntry = strFriend + _T(": ") + CString(msg.c_str());
+		CString logEntry = strFriend + _T(": ") + utf8toCString(msg);
 
 		m_chatLogs[listindex].push_back(logEntry);
 		if(m_listFriends.GetCurSel() == listindex)

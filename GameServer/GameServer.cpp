@@ -174,6 +174,7 @@ int main()
 				continue;
 			for (auto p : shard->GetPlayers())
 			{
+
 				//auto player = p.second;
 				memset(&netAddr, 0, sizeof(netAddr));
 				//this_thread::sleep_for(300ms);

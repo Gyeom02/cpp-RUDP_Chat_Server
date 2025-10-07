@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "Player.h"
+#include <span>
 
 Player::Player(int32 id) 
 	: playerId(id), roomId(-1), roomprimid(-1), teamNum(-1)

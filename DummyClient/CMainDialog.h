@@ -33,6 +33,8 @@ public:
 	void AddFriends(vector<Friend>& friends);
 	void AddFriend(Friend _friend);
 	void SendGetFriends();
+	string to_utf8(const std::wstring& wstr);
+	CString utf8toCString(const std::string& wstr);
 	int32 FindFriendIndex(int32 primid); // Using for to get listindex who gave me chat
 	void HandleMSG(int32 handle, int32 listindex, string msg);
 public:

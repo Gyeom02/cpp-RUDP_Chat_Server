@@ -48,7 +48,7 @@ struct TableStruct_Protocol_2eproto {
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
   static const ::PROTOBUF_NAMESPACE_ID::internal::AuxiliaryParseTableField aux[]
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
-  static const ::PROTOBUF_NAMESPACE_ID::internal::ParseTable schema[22]
+  static const ::PROTOBUF_NAMESPACE_ID::internal::ParseTable schema[25]
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
   static const ::PROTOBUF_NAMESPACE_ID::internal::FieldMetadata field_metadata[];
   static const ::PROTOBUF_NAMESPACE_ID::internal::SerializationTable serialization_table[];
@@ -71,6 +71,9 @@ extern C_GETFRIENDREQUESTDefaultTypeInternal _C_GETFRIENDREQUEST_default_instanc
 class C_GETFRIENDS;
 struct C_GETFRIENDSDefaultTypeInternal;
 extern C_GETFRIENDSDefaultTypeInternal _C_GETFRIENDS_default_instance_;
+class C_KEYREADY;
+struct C_KEYREADYDefaultTypeInternal;
+extern C_KEYREADYDefaultTypeInternal _C_KEYREADY_default_instance_;
 class C_LOGIN;
 struct C_LOGINDefaultTypeInternal;
 extern C_LOGINDefaultTypeInternal _C_LOGIN_default_instance_;
@@ -89,6 +92,9 @@ extern C_RUDPACKDefaultTypeInternal _C_RUDPACK_default_instance_;
 class C_SENDMSG;
 struct C_SENDMSGDefaultTypeInternal;
 extern C_SENDMSGDefaultTypeInternal _C_SENDMSG_default_instance_;
+class C_SHAREPUBLICKEY;
+struct C_SHAREPUBLICKEYDefaultTypeInternal;
+extern C_SHAREPUBLICKEYDefaultTypeInternal _C_SHAREPUBLICKEY_default_instance_;
 class S_DISCONNECT;
 struct S_DISCONNECTDefaultTypeInternal;
 extern S_DISCONNECTDefaultTypeInternal _S_DISCONNECT_default_instance_;
@@ -122,6 +128,9 @@ extern S_RUDPACKDefaultTypeInternal _S_RUDPACK_default_instance_;
 class S_SENDMSG;
 struct S_SENDMSGDefaultTypeInternal;
 extern S_SENDMSGDefaultTypeInternal _S_SENDMSG_default_instance_;
+class S_SHAREPUBLICKEY;
+struct S_SHAREPUBLICKEYDefaultTypeInternal;
+extern S_SHAREPUBLICKEYDefaultTypeInternal _S_SHAREPUBLICKEY_default_instance_;
 }  // namespace Protocol
 PROTOBUF_NAMESPACE_OPEN
 template<> ::Protocol::C_DISCONNECT* Arena::CreateMaybeMessage<::Protocol::C_DISCONNECT>(Arena*);
@@ -129,12 +138,14 @@ template<> ::Protocol::C_FINDACCOUNT* Arena::CreateMaybeMessage<::Protocol::C_FI
 template<> ::Protocol::C_GETCHATLOG* Arena::CreateMaybeMessage<::Protocol::C_GETCHATLOG>(Arena*);
 template<> ::Protocol::C_GETFRIENDREQUEST* Arena::CreateMaybeMessage<::Protocol::C_GETFRIENDREQUEST>(Arena*);
 template<> ::Protocol::C_GETFRIENDS* Arena::CreateMaybeMessage<::Protocol::C_GETFRIENDS>(Arena*);
+template<> ::Protocol::C_KEYREADY* Arena::CreateMaybeMessage<::Protocol::C_KEYREADY>(Arena*);
 template<> ::Protocol::C_LOGIN* Arena::CreateMaybeMessage<::Protocol::C_LOGIN>(Arena*);
 template<> ::Protocol::C_MAKEACCOUNT* Arena::CreateMaybeMessage<::Protocol::C_MAKEACCOUNT>(Arena*);
 template<> ::Protocol::C_REQUESTFRIEND* Arena::CreateMaybeMessage<::Protocol::C_REQUESTFRIEND>(Arena*);
 template<> ::Protocol::C_REQUESTRESPONSE* Arena::CreateMaybeMessage<::Protocol::C_REQUESTRESPONSE>(Arena*);
 template<> ::Protocol::C_RUDPACK* Arena::CreateMaybeMessage<::Protocol::C_RUDPACK>(Arena*);
 template<> ::Protocol::C_SENDMSG* Arena::CreateMaybeMessage<::Protocol::C_SENDMSG>(Arena*);
+template<> ::Protocol::C_SHAREPUBLICKEY* Arena::CreateMaybeMessage<::Protocol::C_SHAREPUBLICKEY>(Arena*);
 template<> ::Protocol::S_DISCONNECT* Arena::CreateMaybeMessage<::Protocol::S_DISCONNECT>(Arena*);
 template<> ::Protocol::S_FINDACCOUNT* Arena::CreateMaybeMessage<::Protocol::S_FINDACCOUNT>(Arena*);
 template<> ::Protocol::S_GETCHATLOG* Arena::CreateMaybeMessage<::Protocol::S_GETCHATLOG>(Arena*);
@@ -146,6 +157,7 @@ template<> ::Protocol::S_REQUESTFRIEND* Arena::CreateMaybeMessage<::Protocol::S_
 template<> ::Protocol::S_REQUESTRESPONSE* Arena::CreateMaybeMessage<::Protocol::S_REQUESTRESPONSE>(Arena*);
 template<> ::Protocol::S_RUDPACK* Arena::CreateMaybeMessage<::Protocol::S_RUDPACK>(Arena*);
 template<> ::Protocol::S_SENDMSG* Arena::CreateMaybeMessage<::Protocol::S_SENDMSG>(Arena*);
+template<> ::Protocol::S_SHAREPUBLICKEY* Arena::CreateMaybeMessage<::Protocol::S_SHAREPUBLICKEY>(Arena*);
 PROTOBUF_NAMESPACE_CLOSE
 namespace Protocol {
 
@@ -3517,6 +3529,434 @@ class S_GETCHATLOG final :
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_Protocol_2eproto;
 };
+// -------------------------------------------------------------------
+
+class C_SHAREPUBLICKEY final :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:Protocol.C_SHAREPUBLICKEY) */ {
+ public:
+  inline C_SHAREPUBLICKEY() : C_SHAREPUBLICKEY(nullptr) {}
+  ~C_SHAREPUBLICKEY() override;
+  explicit constexpr C_SHAREPUBLICKEY(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized);
+
+  C_SHAREPUBLICKEY(const C_SHAREPUBLICKEY& from);
+  C_SHAREPUBLICKEY(C_SHAREPUBLICKEY&& from) noexcept
+    : C_SHAREPUBLICKEY() {
+    *this = ::std::move(from);
+  }
+
+  inline C_SHAREPUBLICKEY& operator=(const C_SHAREPUBLICKEY& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline C_SHAREPUBLICKEY& operator=(C_SHAREPUBLICKEY&& from) noexcept {
+    if (this == &from) return *this;
+    if (GetOwningArena() == from.GetOwningArena()) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const C_SHAREPUBLICKEY& default_instance() {
+    return *internal_default_instance();
+  }
+  static inline const C_SHAREPUBLICKEY* internal_default_instance() {
+    return reinterpret_cast<const C_SHAREPUBLICKEY*>(
+               &_C_SHAREPUBLICKEY_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    22;
+
+  friend void swap(C_SHAREPUBLICKEY& a, C_SHAREPUBLICKEY& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(C_SHAREPUBLICKEY* other) {
+    if (other == this) return;
+    if (GetOwningArena() == other->GetOwningArena()) {
+      InternalSwap(other);
+    } else {
+      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(C_SHAREPUBLICKEY* other) {
+    if (other == this) return;
+    GOOGLE_DCHECK(GetOwningArena() == other->GetOwningArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline C_SHAREPUBLICKEY* New() const final {
+    return new C_SHAREPUBLICKEY();
+  }
+
+  C_SHAREPUBLICKEY* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
+    return CreateMaybeMessage<C_SHAREPUBLICKEY>(arena);
+  }
+  void CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void CopyFrom(const C_SHAREPUBLICKEY& from);
+  void MergeFrom(const C_SHAREPUBLICKEY& from);
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  ::PROTOBUF_NAMESPACE_ID::uint8* _InternalSerialize(
+      ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(C_SHAREPUBLICKEY* other);
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "Protocol.C_SHAREPUBLICKEY";
+  }
+  protected:
+  explicit C_SHAREPUBLICKEY(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  private:
+  static void ArenaDtor(void* object);
+  inline void RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  public:
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kPublickeyFieldNumber = 2,
+    kPrimidFieldNumber = 1,
+  };
+  // bytes publickey = 2;
+  void clear_publickey();
+  const std::string& publickey() const;
+  template <typename ArgT0 = const std::string&, typename... ArgT>
+  void set_publickey(ArgT0&& arg0, ArgT... args);
+  std::string* mutable_publickey();
+  PROTOBUF_FUTURE_MUST_USE_RESULT std::string* release_publickey();
+  void set_allocated_publickey(std::string* publickey);
+  private:
+  const std::string& _internal_publickey() const;
+  inline PROTOBUF_ALWAYS_INLINE void _internal_set_publickey(const std::string& value);
+  std::string* _internal_mutable_publickey();
+  public:
+
+  // int32 primid = 1;
+  void clear_primid();
+  ::PROTOBUF_NAMESPACE_ID::int32 primid() const;
+  void set_primid(::PROTOBUF_NAMESPACE_ID::int32 value);
+  private:
+  ::PROTOBUF_NAMESPACE_ID::int32 _internal_primid() const;
+  void _internal_set_primid(::PROTOBUF_NAMESPACE_ID::int32 value);
+  public:
+
+  // @@protoc_insertion_point(class_scope:Protocol.C_SHAREPUBLICKEY)
+ private:
+  class _Internal;
+
+  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
+  typedef void InternalArenaConstructable_;
+  typedef void DestructorSkippable_;
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr publickey_;
+  ::PROTOBUF_NAMESPACE_ID::int32 primid_;
+  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  friend struct ::TableStruct_Protocol_2eproto;
+};
+// -------------------------------------------------------------------
+
+class S_SHAREPUBLICKEY final :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:Protocol.S_SHAREPUBLICKEY) */ {
+ public:
+  inline S_SHAREPUBLICKEY() : S_SHAREPUBLICKEY(nullptr) {}
+  ~S_SHAREPUBLICKEY() override;
+  explicit constexpr S_SHAREPUBLICKEY(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized);
+
+  S_SHAREPUBLICKEY(const S_SHAREPUBLICKEY& from);
+  S_SHAREPUBLICKEY(S_SHAREPUBLICKEY&& from) noexcept
+    : S_SHAREPUBLICKEY() {
+    *this = ::std::move(from);
+  }
+
+  inline S_SHAREPUBLICKEY& operator=(const S_SHAREPUBLICKEY& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline S_SHAREPUBLICKEY& operator=(S_SHAREPUBLICKEY&& from) noexcept {
+    if (this == &from) return *this;
+    if (GetOwningArena() == from.GetOwningArena()) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const S_SHAREPUBLICKEY& default_instance() {
+    return *internal_default_instance();
+  }
+  static inline const S_SHAREPUBLICKEY* internal_default_instance() {
+    return reinterpret_cast<const S_SHAREPUBLICKEY*>(
+               &_S_SHAREPUBLICKEY_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    23;
+
+  friend void swap(S_SHAREPUBLICKEY& a, S_SHAREPUBLICKEY& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(S_SHAREPUBLICKEY* other) {
+    if (other == this) return;
+    if (GetOwningArena() == other->GetOwningArena()) {
+      InternalSwap(other);
+    } else {
+      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(S_SHAREPUBLICKEY* other) {
+    if (other == this) return;
+    GOOGLE_DCHECK(GetOwningArena() == other->GetOwningArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline S_SHAREPUBLICKEY* New() const final {
+    return new S_SHAREPUBLICKEY();
+  }
+
+  S_SHAREPUBLICKEY* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
+    return CreateMaybeMessage<S_SHAREPUBLICKEY>(arena);
+  }
+  void CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void CopyFrom(const S_SHAREPUBLICKEY& from);
+  void MergeFrom(const S_SHAREPUBLICKEY& from);
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  ::PROTOBUF_NAMESPACE_ID::uint8* _InternalSerialize(
+      ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(S_SHAREPUBLICKEY* other);
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "Protocol.S_SHAREPUBLICKEY";
+  }
+  protected:
+  explicit S_SHAREPUBLICKEY(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  private:
+  static void ArenaDtor(void* object);
+  inline void RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  public:
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kPublickeyFieldNumber = 1,
+  };
+  // bytes publickey = 1;
+  void clear_publickey();
+  const std::string& publickey() const;
+  template <typename ArgT0 = const std::string&, typename... ArgT>
+  void set_publickey(ArgT0&& arg0, ArgT... args);
+  std::string* mutable_publickey();
+  PROTOBUF_FUTURE_MUST_USE_RESULT std::string* release_publickey();
+  void set_allocated_publickey(std::string* publickey);
+  private:
+  const std::string& _internal_publickey() const;
+  inline PROTOBUF_ALWAYS_INLINE void _internal_set_publickey(const std::string& value);
+  std::string* _internal_mutable_publickey();
+  public:
+
+  // @@protoc_insertion_point(class_scope:Protocol.S_SHAREPUBLICKEY)
+ private:
+  class _Internal;
+
+  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
+  typedef void InternalArenaConstructable_;
+  typedef void DestructorSkippable_;
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr publickey_;
+  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  friend struct ::TableStruct_Protocol_2eproto;
+};
+// -------------------------------------------------------------------
+
+class C_KEYREADY final :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:Protocol.C_KEYREADY) */ {
+ public:
+  inline C_KEYREADY() : C_KEYREADY(nullptr) {}
+  ~C_KEYREADY() override;
+  explicit constexpr C_KEYREADY(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized);
+
+  C_KEYREADY(const C_KEYREADY& from);
+  C_KEYREADY(C_KEYREADY&& from) noexcept
+    : C_KEYREADY() {
+    *this = ::std::move(from);
+  }
+
+  inline C_KEYREADY& operator=(const C_KEYREADY& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline C_KEYREADY& operator=(C_KEYREADY&& from) noexcept {
+    if (this == &from) return *this;
+    if (GetOwningArena() == from.GetOwningArena()) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const C_KEYREADY& default_instance() {
+    return *internal_default_instance();
+  }
+  static inline const C_KEYREADY* internal_default_instance() {
+    return reinterpret_cast<const C_KEYREADY*>(
+               &_C_KEYREADY_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    24;
+
+  friend void swap(C_KEYREADY& a, C_KEYREADY& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(C_KEYREADY* other) {
+    if (other == this) return;
+    if (GetOwningArena() == other->GetOwningArena()) {
+      InternalSwap(other);
+    } else {
+      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(C_KEYREADY* other) {
+    if (other == this) return;
+    GOOGLE_DCHECK(GetOwningArena() == other->GetOwningArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline C_KEYREADY* New() const final {
+    return new C_KEYREADY();
+  }
+
+  C_KEYREADY* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
+    return CreateMaybeMessage<C_KEYREADY>(arena);
+  }
+  void CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void CopyFrom(const C_KEYREADY& from);
+  void MergeFrom(const C_KEYREADY& from);
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  ::PROTOBUF_NAMESPACE_ID::uint8* _InternalSerialize(
+      ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(C_KEYREADY* other);
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "Protocol.C_KEYREADY";
+  }
+  protected:
+  explicit C_KEYREADY(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  private:
+  static void ArenaDtor(void* object);
+  inline void RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  public:
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kBreadyFieldNumber = 1,
+    kPrimidFieldNumber = 2,
+  };
+  // int32 bready = 1;
+  void clear_bready();
+  ::PROTOBUF_NAMESPACE_ID::int32 bready() const;
+  void set_bready(::PROTOBUF_NAMESPACE_ID::int32 value);
+  private:
+  ::PROTOBUF_NAMESPACE_ID::int32 _internal_bready() const;
+  void _internal_set_bready(::PROTOBUF_NAMESPACE_ID::int32 value);
+  public:
+
+  // int32 primid = 2;
+  void clear_primid();
+  ::PROTOBUF_NAMESPACE_ID::int32 primid() const;
+  void set_primid(::PROTOBUF_NAMESPACE_ID::int32 value);
+  private:
+  ::PROTOBUF_NAMESPACE_ID::int32 _internal_primid() const;
+  void _internal_set_primid(::PROTOBUF_NAMESPACE_ID::int32 value);
+  public:
+
+  // @@protoc_insertion_point(class_scope:Protocol.C_KEYREADY)
+ private:
+  class _Internal;
+
+  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
+  typedef void InternalArenaConstructable_;
+  typedef void DestructorSkippable_;
+  ::PROTOBUF_NAMESPACE_ID::int32 bready_;
+  ::PROTOBUF_NAMESPACE_ID::int32 primid_;
+  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  friend struct ::TableStruct_Protocol_2eproto;
+};
 // ===================================================================
 
 
@@ -5280,9 +5720,177 @@ S_GETCHATLOG::logs() const {
   return logs_;
 }
 
+// -------------------------------------------------------------------
+
+// C_SHAREPUBLICKEY
+
+// int32 primid = 1;
+inline void C_SHAREPUBLICKEY::clear_primid() {
+  primid_ = 0;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 C_SHAREPUBLICKEY::_internal_primid() const {
+  return primid_;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 C_SHAREPUBLICKEY::primid() const {
+  // @@protoc_insertion_point(field_get:Protocol.C_SHAREPUBLICKEY.primid)
+  return _internal_primid();
+}
+inline void C_SHAREPUBLICKEY::_internal_set_primid(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  
+  primid_ = value;
+}
+inline void C_SHAREPUBLICKEY::set_primid(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  _internal_set_primid(value);
+  // @@protoc_insertion_point(field_set:Protocol.C_SHAREPUBLICKEY.primid)
+}
+
+// bytes publickey = 2;
+inline void C_SHAREPUBLICKEY::clear_publickey() {
+  publickey_.ClearToEmpty();
+}
+inline const std::string& C_SHAREPUBLICKEY::publickey() const {
+  // @@protoc_insertion_point(field_get:Protocol.C_SHAREPUBLICKEY.publickey)
+  return _internal_publickey();
+}
+template <typename ArgT0, typename... ArgT>
+inline PROTOBUF_ALWAYS_INLINE
+void C_SHAREPUBLICKEY::set_publickey(ArgT0&& arg0, ArgT... args) {
+ 
+ publickey_.SetBytes(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, static_cast<ArgT0 &&>(arg0), args..., GetArenaForAllocation());
+  // @@protoc_insertion_point(field_set:Protocol.C_SHAREPUBLICKEY.publickey)
+}
+inline std::string* C_SHAREPUBLICKEY::mutable_publickey() {
+  // @@protoc_insertion_point(field_mutable:Protocol.C_SHAREPUBLICKEY.publickey)
+  return _internal_mutable_publickey();
+}
+inline const std::string& C_SHAREPUBLICKEY::_internal_publickey() const {
+  return publickey_.Get();
+}
+inline void C_SHAREPUBLICKEY::_internal_set_publickey(const std::string& value) {
+  
+  publickey_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, value, GetArenaForAllocation());
+}
+inline std::string* C_SHAREPUBLICKEY::_internal_mutable_publickey() {
+  
+  return publickey_.Mutable(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, GetArenaForAllocation());
+}
+inline std::string* C_SHAREPUBLICKEY::release_publickey() {
+  // @@protoc_insertion_point(field_release:Protocol.C_SHAREPUBLICKEY.publickey)
+  return publickey_.Release(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArenaForAllocation());
+}
+inline void C_SHAREPUBLICKEY::set_allocated_publickey(std::string* publickey) {
+  if (publickey != nullptr) {
+    
+  } else {
+    
+  }
+  publickey_.SetAllocated(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), publickey,
+      GetArenaForAllocation());
+  // @@protoc_insertion_point(field_set_allocated:Protocol.C_SHAREPUBLICKEY.publickey)
+}
+
+// -------------------------------------------------------------------
+
+// S_SHAREPUBLICKEY
+
+// bytes publickey = 1;
+inline void S_SHAREPUBLICKEY::clear_publickey() {
+  publickey_.ClearToEmpty();
+}
+inline const std::string& S_SHAREPUBLICKEY::publickey() const {
+  // @@protoc_insertion_point(field_get:Protocol.S_SHAREPUBLICKEY.publickey)
+  return _internal_publickey();
+}
+template <typename ArgT0, typename... ArgT>
+inline PROTOBUF_ALWAYS_INLINE
+void S_SHAREPUBLICKEY::set_publickey(ArgT0&& arg0, ArgT... args) {
+ 
+ publickey_.SetBytes(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, static_cast<ArgT0 &&>(arg0), args..., GetArenaForAllocation());
+  // @@protoc_insertion_point(field_set:Protocol.S_SHAREPUBLICKEY.publickey)
+}
+inline std::string* S_SHAREPUBLICKEY::mutable_publickey() {
+  // @@protoc_insertion_point(field_mutable:Protocol.S_SHAREPUBLICKEY.publickey)
+  return _internal_mutable_publickey();
+}
+inline const std::string& S_SHAREPUBLICKEY::_internal_publickey() const {
+  return publickey_.Get();
+}
+inline void S_SHAREPUBLICKEY::_internal_set_publickey(const std::string& value) {
+  
+  publickey_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, value, GetArenaForAllocation());
+}
+inline std::string* S_SHAREPUBLICKEY::_internal_mutable_publickey() {
+  
+  return publickey_.Mutable(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, GetArenaForAllocation());
+}
+inline std::string* S_SHAREPUBLICKEY::release_publickey() {
+  // @@protoc_insertion_point(field_release:Protocol.S_SHAREPUBLICKEY.publickey)
+  return publickey_.Release(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArenaForAllocation());
+}
+inline void S_SHAREPUBLICKEY::set_allocated_publickey(std::string* publickey) {
+  if (publickey != nullptr) {
+    
+  } else {
+    
+  }
+  publickey_.SetAllocated(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), publickey,
+      GetArenaForAllocation());
+  // @@protoc_insertion_point(field_set_allocated:Protocol.S_SHAREPUBLICKEY.publickey)
+}
+
+// -------------------------------------------------------------------
+
+// C_KEYREADY
+
+// int32 bready = 1;
+inline void C_KEYREADY::clear_bready() {
+  bready_ = 0;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 C_KEYREADY::_internal_bready() const {
+  return bready_;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 C_KEYREADY::bready() const {
+  // @@protoc_insertion_point(field_get:Protocol.C_KEYREADY.bready)
+  return _internal_bready();
+}
+inline void C_KEYREADY::_internal_set_bready(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  
+  bready_ = value;
+}
+inline void C_KEYREADY::set_bready(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  _internal_set_bready(value);
+  // @@protoc_insertion_point(field_set:Protocol.C_KEYREADY.bready)
+}
+
+// int32 primid = 2;
+inline void C_KEYREADY::clear_primid() {
+  primid_ = 0;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 C_KEYREADY::_internal_primid() const {
+  return primid_;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 C_KEYREADY::primid() const {
+  // @@protoc_insertion_point(field_get:Protocol.C_KEYREADY.primid)
+  return _internal_primid();
+}
+inline void C_KEYREADY::_internal_set_primid(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  
+  primid_ = value;
+}
+inline void C_KEYREADY::set_primid(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  _internal_set_primid(value);
+  // @@protoc_insertion_point(field_set:Protocol.C_KEYREADY.primid)
+}
+
 #ifdef __GNUC__
   #pragma GCC diagnostic pop
 #endif  // __GNUC__
+// -------------------------------------------------------------------
+
+// -------------------------------------------------------------------
+
+// -------------------------------------------------------------------
+
 // -------------------------------------------------------------------
 
 // -------------------------------------------------------------------

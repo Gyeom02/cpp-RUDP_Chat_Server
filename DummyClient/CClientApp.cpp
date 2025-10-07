@@ -59,12 +59,17 @@ BOOL CClientApp::InitInstance()
 		AfxBeginThread(DoJobThread, this);
 		AfxBeginThread(ReplyRecved, this);
 	}
+
 	
 	CLoginDialog dig;
 	m_pMainWnd = &dig;
 	INT_PTR nResponse = dig.DoModal();
+
+	
+	
 	if (nResponse == IDOK)
 	{
+		
 
 		//CMainDialog maindig(dig.m_strID);
 		//m_pMainWnd = &maindig;
@@ -77,11 +82,28 @@ BOOL CClientApp::InitInstance()
 	
 	return FALSE;
 }
+void CClientApp::SendExitPkt()
+{
+	if (user)
+	{
+		if (user->playerId > 0)
+		{
+			Protocol::C_DISCONNECT pkt;
+			pkt.set_id(user->playerId);
+			pkt.set_roomid(user->roomId);
+			pkt.set_roomprimid(user->roomprimid);
+			SendBufferRef sendBuffer = ServerPacketHandler::MakeReliableBuffer(pkt, QoSCore::HIGH);
+
+			user->Send(sendBuffer);
+		}
+	}
+}
 
 int CClientApp::ExitInstance()
 {
+	SendExitPkt();
 	AfxThreadManager::GetInstance().StopThreads();
-	m_pMainWnd->PostMessage(WM_CLOSE);
+	
 	return CWinApp::ExitInstance();
 }
 
@@ -100,3 +122,4 @@ void AfxThreadManager::StopThreads()
 	}
 	_threads.clear();
 }
+

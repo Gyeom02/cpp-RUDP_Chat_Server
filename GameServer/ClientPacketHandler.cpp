@@ -116,7 +116,7 @@ bool Handle_C_LOGIN(UDPSocketPtr udpSocket, NetAddress clientAddr, PacketHeader*
 		playerRef = MakeShared<Player>(getPrimId);
 		GQoS->GetShard(getPrimId)->MakeQoSPlayer(getPrimId);
 		GPlayerManager.Add(getPrimId, playerRef);
-		
+		playerRef->Getx25519().generate();
 	}
 	else
 	{
@@ -232,6 +232,7 @@ bool Handle_C_REQUESTRESPONSE(UDPSocketPtr udpSocket, NetAddress clientAddr, Pac
 
 bool Handle_C_GETFRIENDS(UDPSocketPtr udpSocket, NetAddress clientAddr, PacketHeader* header, Protocol::C_GETFRIENDS& pkt)
 {
+	//cout << "Handle_C_GETFRIENDS" << endl;
 	Protocol::S_GETFRIENDS sendpkt;
 	vector<int32> _ids;
 	vector<string> _names;
@@ -303,6 +304,59 @@ bool Handle_C_GETCHATLOG(UDPSocketPtr udpSocket, NetAddress clientAddr, PacketHe
 	{
 		return false;
 	}
+}
+
+bool Handle_C_SHAREPUBLICKEY(UDPSocketPtr udpSocket, NetAddress clientAddr, PacketHeader* header, Protocol::C_SHAREPUBLICKEY& pkt)
+{
+	auto player = GPlayerManager.GetPlayer(pkt.primid());
+	if (player == nullptr)
+		return false;
+	vector<uint8> server_pub(32);
+	x25519_get_public(player->Getx25519().get(), server_pub);
+	vector<uint8> ss;
+	//cout << "server_pub : " << to_hex(server_pub) << endl;
+	const std::string& data = pkt.publickey(); // bytes 타입은 std::string으로 매핑됨
+	vector<uint8> client_pub;
+	client_pub.resize(data.size());                // vector 크기 맞춤
+	std::copy(data.begin(), data.end(), client_pub.begin()); // std::string -> vector 복사
+
+	//vector<uint8> client_pub(pkt.publickey().begin(), pkt.publickey().end());
+	if (!x25519_derive_shared(player->Getx25519().get(), client_pub, ss))
+	{
+		cout << " Handle_C_SHAREPUBLICKEY : make shared key failed" << endl;
+		return false;
+	}
+	vector<uint8> aes_key;
+	if (!make_aes256_key(ss, aes_key))
+	{
+		cout << " Handle_C_SHAREPUBLICKEY : make aes256 key failed" << endl;
+		return false;
+	}
+	else 
+		cout << " Handle_C_SHAREPUBLICKEY : make aes256 key : " << to_hex(aes_key) << endl;
+	cout << "SIZE : " << server_pub.size() << endl;
+	Protocol::S_SHAREPUBLICKEY sendpkt;
+	sendpkt.set_publickey(string(server_pub.begin(), server_pub.end()));
+	
+	auto sendbuffer = ClientPacketHandler::MakeReliableBuffer(sendpkt, QoSCore::HIGH);
+	player->Send(sendbuffer);
+
+	player->SetAesKey(aes_key);
+	return false;
+}
+
+bool Handle_C_KEYREADY(UDPSocketPtr udpSocket, NetAddress clientAddr, PacketHeader* header, Protocol::C_KEYREADY& pkt)
+{
+	if (pkt.bready() == 1)
+	{
+		auto player = GPlayerManager.GetPlayer(pkt.primid());
+		if (player)
+		{
+			player->keyready = true;
+		}
+	}
+	else
+		return false;
 }
 
 /*bool Handle_C_INIT(UDPSocketPtr udpSocket, NetAddress clientAddr, PacketHeader* header, Protocol::C_INIT& pkt)

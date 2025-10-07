@@ -1,7 +1,6 @@
 #include "pch.h"
 #include "UDP.h"
 
-
 #define SERVERADDR L"192.168.219.101"
 
 UDP GUDP;

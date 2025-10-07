@@ -34,6 +34,9 @@
     <Filter Include="MFC\Dialog\Login\SignUp">
       <UniqueIdentifier>{d9c91cda-925b-416f-8827-aff9c26a61a2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Encryption">
+      <UniqueIdentifier>{3791f4c2-0a5d-47fc-bb8c-ab116c24e4b5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DummyClient.cpp">
@@ -90,6 +93,9 @@
     <ClCompile Include="CFindIDDialog.cpp">
       <Filter>MFC\Dialog\Login\Find</Filter>
     </ClCompile>
+    <ClCompile Include="Encrypt.cpp">
+      <Filter>Encryption</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -145,6 +151,9 @@
     </ClInclude>
     <ClInclude Include="CFindIDDialog.h">
       <Filter>MFC\Dialog\Login\Find</Filter>
+    </ClInclude>
+    <ClInclude Include="Encrypt.h">
+      <Filter>Encryption</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

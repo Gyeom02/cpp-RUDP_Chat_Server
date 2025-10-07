@@ -3,7 +3,7 @@
 #define WIN32_LEAN_AND_MEAN // 거의 사용되지 않는 내용을 Windows 헤더에서 제외합니다.
 //#define _SERVER
 #ifdef _DEBUG
-
+//#define ENCRYPTED_HARD //모든 패킷을 암호화할 것인지 판단
 #pragma comment(lib, "ServerCore\\Debug\\ServerCore.lib")
 #pragma comment(lib, "Protobuf\\Debug\\libprotobufd.lib")
 #else
@@ -23,7 +23,7 @@
 #include "ServerPacketHandler.h"
 #include "Player.h"
 #include "PlayerManager.h"
-
+#include "Encrypt.h"
 
 
 //#include <afxwin.h>

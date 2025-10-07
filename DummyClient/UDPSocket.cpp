@@ -71,23 +71,43 @@ void UDPSocket::UDPWork()
 						continue;
 					}
 				}
-				BYTE* cpybuffer = new BYTE[1000];
-				int packetSize = 0;
+				int packetSize = header->size;
+
+				if (header->encrypted == 1)
+				{
+					int decrypyedlen = aes256_gcm_decrypt(user->GetAesKey(), reinterpret_cast<BYTE*>(header));
+					if (decrypyedlen > 0) // 복호화 성공
+					{
+						//cout << "패킷 복호화 성공! | 패킷 사이즈 : " << packetSize << endl;
+						packetSize = sizeof(PacketHeader) + decrypyedlen;
+
+					}
+					else
+					{
+						//cout << "패킷 복호화 실패 " << endl;
+						continue;
+					}
+
+				}
+				
+				BYTE* cpybuffer = new BYTE[1000]; // 임시용 원래 이러면 안됨 정확한 패킷 사이즈를 위한 용량이 필요함 1000바이트로는 부족할 수 있음
+
 				if (header->compressed == 1) // 압축된 패킷이다
 				{
-					//LZ4 Decompress
 					::memcpy(cpybuffer, &udpRecvBuffer.ReadPos()[processLen], sizeof(PacketHeader));
 					int decompress_size = LZ4_decompress_safe(reinterpret_cast<const char*>(&header[1]), reinterpret_cast<char*>(cpybuffer + sizeof(PacketHeader)), header->compress_size, header->decompress_size);
-					/////////////////////////////
-					
+
+					cout << "압축 패킷 사이즈 : " << header->compress_size << " | " << "압축해제 패킷 사이즈 : " << decompress_size << endl;
+					cout << header->decompress_size << endl;
 					packetSize = sizeof(PacketHeader) + decompress_size;
 				}
 				else // 압축된 패킷이 아님
 				{
 					::memcpy(cpybuffer, &udpRecvBuffer.ReadPos()[processLen], header->size);
-					packetSize = header->size;
+					
 				}
 				GUDP.CheckPacketPriority(shared_from_this(), NetAddress(recvAddr), cpybuffer, packetSize);
+				//cout << "SERVER GOT MSG FROM : " << header->playerId << endl;
 				processLen += header->size;
 			}
 			if (processLen < 0 || dataSize < processLen || udpRecvBuffer.OnRead(processLen) == false)
@@ -113,7 +133,26 @@ void UDPSocket::UDPWork()
 
 int32 UDPSocket::Send(PlayerRef player, SendBufferRef sendBuffer)
 {
+	vector<uint8>& aes_key = player->GetAesKey();
+	if (user->keyready) // 키 생성 됨 -> 암호화 가능
+	{
+
+		if (!aes256_gcm_encrypt(aes_key, sendBuffer)) { std::cerr << "encrypt fail\n"; return -1; }
+
+
+	}
+#ifdef ENCRYPTED_HARD
+	else // 키가 없음(아직 교환 안됨) -> 암호화 불가능
+	{
+		return;
+	}
+#else
+#endif
 	PacketHeader* header = reinterpret_cast<PacketHeader*>(sendBuffer->Buffer());
+
+	//sendBuffer->Close(header->size); // PacketHandler::MakeSendBuffer에서 원래 닫아줬는데 암호화를 추가해주었기에 패킷 크기가 늘 수도 있어 최종적으로 여기서 닫기로 결정함
+
+
 	if (header->breliable == false)
 	{
 		FPCSend(player, sendBuffer);

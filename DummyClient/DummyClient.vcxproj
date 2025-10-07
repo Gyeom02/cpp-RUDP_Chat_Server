@@ -86,8 +86,8 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SolutionDir)ServerCore\;$(SolutionDir)Libraries\Include\;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)Libraries\Libs\;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)ServerCore\;$(SolutionDir)Libraries\Include\;C:\Program Files\OpenSSL-Win64\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)Libraries\Libs\;C:\Program Files\OpenSSL-Win64\lib;C:\Program Files\OpenSSL-Win64\lib\VC;$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)Binary\$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -145,11 +145,13 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp20</LanguageStandard>
+      <AdditionalIncludeDirectories>C:\Program Files\OpenSSL-Win64\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>odbc32.lib</AdditionalDependencies>
+      <AdditionalDependencies>odbc32.lib;capi.lib;dasync.lib;ec_internal_test.lib;legacy.lib;libapps.lib;libcommon.lib;libcrypto.lib;libcrypto_static.lib;libdefault.lib;liblegacy.lib;libssl.lib;libssl_static.lib;libtestutil.lib;loader_attic.lib;openssl.lib;ossltest.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\Program Files\OpenSSL-Win64\lib\VC\x64\MD;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PreBuildEvent>
       <Command>CALL $(SolutionDir)Common\Protobuf\bin\GenPackets.bat</Command>
@@ -185,6 +187,7 @@
     <ClCompile Include="CMainDialog.cpp" />
     <ClCompile Include="CRequestDialog.cpp" />
     <ClCompile Include="CSignUpDialog.cpp" />
+    <ClCompile Include="Encrypt.cpp" />
     <ClCompile Include="Enum.pb.cc">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
@@ -225,6 +228,7 @@
     <ClInclude Include="CMainDialog.h" />
     <ClInclude Include="CRequestDialog.h" />
     <ClInclude Include="CSignUpDialog.h" />
+    <ClInclude Include="Encrypt.h" />
     <ClInclude Include="Enum.pb.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="PlayerManager.h" />
