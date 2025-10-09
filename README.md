@@ -14,8 +14,16 @@ Server
 
 RUDP Pacekt QoS(패킷 전송 보장, 패킷 우선순위(High, Medieum, Low)), 패킷 압축, 패킷 암호화
 
+
+
 UDP & RUDP 비교
-<img width="979" height="514" alt="0 1ms_RUDP" src="https://github.com/user-attachments/assets/1b0b3c4c-1a5c-47f3-bcf4-2a2c969579f8" /> <img width="981" height="514" alt="0 1ms_No_RUDP" src="https://github.com/user-attachments/assets/3dda6754-8191-47a2-b299-a1cd920bffa4" />
+
+UDP
+<img width="981" height="514" alt="0 1ms_No_RUDP" src="https://github.com/user-attachments/assets/3dda6754-8191-47a2-b299-a1cd920bffa4" />
+RUDP
+<img width="979" height="514" alt="0 1ms_RUDP" src="https://github.com/user-attachments/assets/1b0b3c4c-1a5c-47f3-bcf4-2a2c969579f8" /> 
+
+
 
 패킷 암호화 & 복호화 / Packet Encrypt & Decrypt
 <img width="1099" height="125" alt="패킷 암호화 복호화" src="https://github.com/user-attachments/assets/c8c66dc8-ddab-4169-84d3-e666b78ba330" />
