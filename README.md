@@ -6,9 +6,9 @@ MFC Chat Client
 Login
 ![스크린샷(62)](https://github.com/user-attachments/assets/bd74da0d-18d7-4981-bbb1-1092a38b7d16)
 
-Main
-<img width="1920" height="1080" alt="스크린샷(63)" src="https://github.com/user-attachments/assets/61d18174-f2ec-4b34-90ab-3ad2a5665028" />
 
+Main
+![스크린샷(63)](https://github.com/user-attachments/assets/67171ae4-df9d-44c7-a837-dad56d290ef9)
 
 Server
 
